@@ -1,7 +1,8 @@
-package com.ddproject.board.entity;
+package com.ddproject.member;
 
 import com.ddproject.board.MemberEnum.BoardMemberEnum;
 import com.ddproject.board.MemberEnum.BoardMemberStatus;
+import com.ddproject.board.entity.Board;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -42,9 +43,13 @@ public class BoardMember {
 	private ZonedDateTime lastNicknameUpdate;
 //	private String userStatus;
 
+	@PrePersist
+	protected void onCreate() {
+		accountCreationDate = ZonedDateTime.now();
+	}
+
 	public BoardMember(User user) {
 		this.user = user;
-		this.accountCreationDate = ZonedDateTime.now();
 	}
 
 	public void updateNickname(String newNickname) {

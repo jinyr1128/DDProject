@@ -1,7 +1,6 @@
 package com.ddproject.board;
 
-import com.ddproject.board.MemberEnum.BoardMemberStatus;
-import com.ddproject.board.entity.BoardMember;
+import com.ddproject.member.BoardMember;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
