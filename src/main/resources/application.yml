@@ -1,4 +1,5 @@
 spring:
+
   jpa:
     hibernate:
       ddl-auto: update
@@ -29,4 +30,3 @@ logging:
     org.springframework: info
     com.ddproject: debug
     org.springframework.security: debug
-
