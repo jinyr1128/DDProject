@@ -62,8 +62,8 @@ public class CustomSecurityConfig {
         apiLoginFilter.setAuthenticationManager(authenticationManager);
 
         // username필터 이전으로 설정
-        http.addFilterBefore(tokenCheckFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
         http.addFilterBefore(apiLoginFilter, UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(tokenCheckFilter(jwtUtil, userDetailsService), UsernamePasswordAuthenticationFilter.class);
 
         http.addFilterBefore(new RefreshTokenFilter("/refreshToken", jwtUtil),
                 TokenCheckFilter.class);
@@ -82,7 +82,7 @@ public class CustomSecurityConfig {
         return http.build();
     }
 
-    private TokenCheckFilter tokenCheckFilter(JWTUtil jwtUtil) {
-        return new TokenCheckFilter(jwtUtil);
+    private TokenCheckFilter tokenCheckFilter(JWTUtil jwtUtil, UserDetailsService userDetailsService) {
+        return new TokenCheckFilter(userDetailsService, jwtUtil);
     }
 }
