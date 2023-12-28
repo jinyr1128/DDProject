@@ -1,8 +1,8 @@
 package com.ddproject.member;
 
 import com.ddproject.board.MemberEnum.BoardMemberEnum;
-import com.ddproject.board.MemberEnum.BoardMemberStatus;
 import com.ddproject.board.entity.Board;
+import com.ddproject.user.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -59,5 +59,9 @@ public class BoardMember {
 
 	public void updateStatus(BoardMemberStatus newStatus) {
 		this.status = newStatus;
+	}
+
+	public boolean isAdmin() {
+		return this.role == BoardMemberEnum.ADMIN;
 	}
 }
