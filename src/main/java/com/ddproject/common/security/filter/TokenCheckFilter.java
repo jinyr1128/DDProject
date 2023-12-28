@@ -1,5 +1,6 @@
 package com.ddproject.common.security.filter;
 
+import com.ddproject.common.security.UserDetailsService;
 import com.ddproject.common.security.exception.AccessTokenException;
 import com.ddproject.common.util.JWTUtil;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -10,6 +11,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
@@ -19,6 +23,7 @@ import java.util.Map;
 @Log4j2
 @RequiredArgsConstructor
 public class TokenCheckFilter extends OncePerRequestFilter {
+        private final UserDetailsService userDetailsService;
         private final JWTUtil jwtUtil;
 
         @Override
@@ -33,7 +38,20 @@ public class TokenCheckFilter extends OncePerRequestFilter {
                 log.info("-----Token Check Filter-----");
 
                 try {
-                        validateAccessToken(request);
+                        Map<String, Object> payload = validateAccessToken(request);
+
+                        String username = (String)payload.get("username");
+
+                        log.info("username: " + username);
+
+                        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+
+                        UsernamePasswordAuthenticationToken authenticationToken =
+                                new UsernamePasswordAuthenticationToken(
+                                        userDetails, null, userDetails.getAuthorities());
+
+                        SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+
                         filterChain.doFilter(request, response);
                 } catch (AccessTokenException accessTokenException){
                         accessTokenException.sendResponseError(response);
