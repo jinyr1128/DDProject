@@ -1,8 +1,7 @@
 package com.ddproject.member;
 
-import com.ddproject.board.MemberEnum.BoardMemberEnum;
 import com.ddproject.board.entity.Board;
-import com.ddproject.user.User;
+import com.ddproject.user.domain.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -63,5 +62,31 @@ public class BoardMember {
 
 	public boolean isAdmin() {
 		return this.role == BoardMemberEnum.ADMIN;
+	}
+
+	public enum BoardMemberStatus {
+	}
+
+	@Getter
+	public enum BoardMemberEnum {
+
+		ADMIN(Authority.ADMIN),
+		MEMBER(Authority.MEMBER);
+
+		private final String authority;
+
+		BoardMemberEnum(String authority) {
+			this.authority = authority;
+		}
+
+		public String getAuthority() {
+			return this.authority;
+		}
+
+		public static class Authority {
+			public static final String ADMIN = "ROLE_ADMIN";
+			public static final String MEMBER = "ROLE_MEMBER";
+		}
+
 	}
 }
