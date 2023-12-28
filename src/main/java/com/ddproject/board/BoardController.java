@@ -1,7 +1,7 @@
 package com.ddproject.board;
 
-import com.ddproject.board.BoardDto.BoardRequestDto;
-import com.ddproject.board.BoardDto.BoardResponseDto;
+import com.ddproject.board.dto.BoardRequestDto;
+import com.ddproject.board.dto.BoardResponseDto;
 import com.ddproject.user.User;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
