@@ -1,7 +1,7 @@
 package com.ddproject.board;
 
 import com.ddproject.board.entity.Board;
-import com.ddproject.user.User;
+import com.ddproject.user.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

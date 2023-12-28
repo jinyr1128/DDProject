@@ -5,7 +5,7 @@ import com.ddproject.board.dto.BoardResponseDto;
 import com.ddproject.board.entity.Board;
 import com.ddproject.member.BoardMember;
 
-import com.ddproject.user.User;
+import com.ddproject.user.domain.User;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.AccessDeniedException;

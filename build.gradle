@@ -77,8 +77,10 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-validation'
 
     // QueryDSL
-    implementation 'com.querydsl:querydsl-jpa' // QueryDSL JPA 모듈
-    implementation 'com.querydsl:querydsl-apt' // QueryDSL APT 모듈
+    implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
+    annotationProcessor "com.querydsl:querydsl-apt:5.0.0:jakarta"
+    annotationProcessor "jakarta.annotation:jakarta.annotation-api"
+    annotationProcessor "jakarta.persistence:jakarta.persistence-api"
 
 }
 
@@ -87,13 +89,25 @@ tasks.named('test') {
 
 }
 
-// QueryDSL 플러그인 설정
+//QueryDSL 설정
+//def generated = 'src/main/generated'
+def generated = layout.buildDirectory.dir("generated/querydsl").get().asFile
+
 querydsl {
     jpa = true
-    querydslSourcesDir = 'src/main/generated'
+    querydslSourcesDir = generated
+}
+sourceSets {
+    main.java.srcDir generated
 }
 
-sourceSets {
-    main.java.srcDir 'src/main/generated'
+compileQuerydsl{
+    options.annotationProcessorPath = configurations.querydsl
+}
 
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+    querydsl.extendsFrom compileClasspath
 }
