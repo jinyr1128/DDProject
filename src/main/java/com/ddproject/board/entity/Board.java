@@ -10,7 +10,7 @@ import com.ddproject.user.User;
 import java.time.ZonedDateTime;
 import java.util.Set;
 import java.util.UUID;
-
+ //1
 @Entity
 @Getter
 @NoArgsConstructor
