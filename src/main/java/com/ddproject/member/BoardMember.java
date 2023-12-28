@@ -39,7 +39,8 @@ public class BoardMember {
 
 
 	private ZonedDateTime accountCreationDate;
-	private ZonedDateTime lastNicknameUpdate;
+	private ZonedDateTime lastNicknameUpDate;
+	private ZonedDateTime lastLoginDate;
 //	private String userStatus;
 
 	@PrePersist
@@ -53,7 +54,7 @@ public class BoardMember {
 
 	public void updateNickname(String newNickname) {
 		this.nickname = newNickname;
-		this.lastNicknameUpdate = ZonedDateTime.now();
+		this.lastNicknameUpDate = ZonedDateTime.now();
 	}
 
 	public void updateStatus(BoardMemberStatus newStatus) {
