@@ -8,6 +8,7 @@ import com.ddproject.member.BoardMember;
 import com.ddproject.user.domain.User;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
@@ -76,6 +77,15 @@ public class BoardService {
 
 		return userBoards.stream()
 				.map(BoardResponseDto::new)
+				.collect(Collectors.toList());
+	}
+
+
+	public List<Board> findBoardsByUserId(Long userId) {
+		List<BoardMember> members = boardMemberRepository.findByUserId(userId);
+		return members.stream()
+				.map(BoardMember::getBoard)
+				.distinct() // 중복 제거
 				.collect(Collectors.toList());
 	}
 

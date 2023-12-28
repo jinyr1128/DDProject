@@ -10,6 +10,8 @@ public interface BoardMemberRepository extends JpaRepository<BoardMember, Long> 
 
 	Optional<BoardMember> findByNickname(String nickname);
 
+	List<BoardMember> findByUserId(Long userId);
+
 	List<BoardMember> findByBoard_Id(Long boardId);
 
 }
