@@ -40,17 +40,18 @@ public class UserController {
 
     @Operation(summary = "유효성 검증 API", description = "유효성 검증 API")
     @GetMapping(value = "/check")
-    public Response<Boolean> validateEmail(CheckRequestDto checkRequestDto) {
+    public Response<Boolean> validateInfo(CheckRequestDto checkRequestDto) {
         boolean result = userService.validateSignup(checkRequestDto);
 
         return Response.success(result);
     }
+    // TODO : implement
 
+    @Operation(summary = "패스워드 변경 API", description = "패스워드 변경 API")
     @PatchMapping("/password")
     public Response<Void> changePw(@RequestBody PasswordDto passwordDto, @AuthenticationPrincipal UserDetails userDetails) {
         log.info(userDetails);
         userService.changePw(passwordDto, userDetails.getUsername());
-
 
         return Response.success();
     }
