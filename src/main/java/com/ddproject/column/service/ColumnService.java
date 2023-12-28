@@ -3,6 +3,8 @@ package com.ddproject.column.service;
 import com.ddproject.column.dto.ColumnDto;
 import com.ddproject.column.repository.ColumnRepository;
 import com.ddproject.column.entity.Column;
+import com.querydsl.jpa.impl.JPAQueryFactory;
+import jakarta.persistence.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,12 +14,13 @@ import java.util.stream.Collectors;
 @Service
 public class ColumnService {
     private final ColumnRepository columnRepository;
+    private final JPAQueryFactory queryFactory;
 
     @Autowired
-    public ColumnService(ColumnRepository columnRepository) {
+    public ColumnService(ColumnRepository columnRepository, EntityManager entityManager) {
         this.columnRepository = columnRepository;
+        this.queryFactory = new JPAQueryFactory(entityManager);
     }
-
     public ColumnDto createColumn(ColumnDto columnDto) {
         Column column = new Column();
         column.setName(columnDto.getName());
@@ -63,4 +66,15 @@ public class ColumnService {
         dto.setBoardId(column.getBoard().getId());
         return dto;
     }
+    public List<ColumnDto> getAllColumns(Long boardId) {
+        QColumn qColumn = QColumn.column;
+        List<Column> columns = queryFactory
+                .selectFrom(qColumn)
+                .where(qColumn.board.id.eq(boardId))
+                .orderBy(qColumn.sequence.asc())
+                .fetch();
+
+        return columns.stream().map(this::convertEntityToDto).collect(Collectors.toList());
+    }
+
 }
