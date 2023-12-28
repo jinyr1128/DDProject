@@ -13,7 +13,6 @@ public class UserDto extends User {
 
     private String username;
     private String password;
-
     public UserDto(String username, String password, Collection<GrantedAuthority> authorities) {
         super(username, password, authorities);
         this.username = username;
