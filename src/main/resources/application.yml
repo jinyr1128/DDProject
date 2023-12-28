@@ -30,3 +30,6 @@ logging:
     org.springframework: info
     com.ddproject: debug
     org.springframework.security: debug
+
+springdoc:
+    show-login-endpoint: true

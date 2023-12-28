@@ -33,7 +33,7 @@ public class UserController {
             throw new BindException(bindingResult);
         }
 
-        SignupUserDto dto = userService.signup(signupUserDto.getUsername(), signupUserDto.getEmail(), signupUserDto.getUsername());
+        SignupUserDto dto = userService.signup(signupUserDto.getUsername(), signupUserDto.getEmail(), signupUserDto.getPassword());
 
         return Response.success(dto);
     }
