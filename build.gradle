@@ -2,11 +2,22 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.2.1'
     id 'io.spring.dependency-management' version '1.1.4'
+    id 'com.ewerk.gradle.plugins.querydsl' version '1.0.10'
 }
 
+querydsl {
+    jpa = true
+    querydslSourcesDir = 'src/main/generated'
+}
 group = 'com'
 version = '0.0.1-SNAPSHOT'
+sourceSets {
+    main.java.srcDir 'src/main/generated'
+}
 
+configurations {
+    querydsl.extendsFrom compileClasspath
+}
 java {
     sourceCompatibility = '17'
 }
@@ -51,7 +62,9 @@ dependencies {
 
     testCompileOnly 'org.projectlombok:lombok:1.18.30'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.30'
-
+    // 쿼리
+    implementation 'com.querydsl:querydsl-jpa'
+    implementation 'com.querydsl:querydsl-apt'
 }
 
 tasks.named('test') {
