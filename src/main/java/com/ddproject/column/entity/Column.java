@@ -1,5 +1,6 @@
 package com.ddproject.column.entity;
 
+import com.ddproject.board.entity.Board;
 import jakarta.persistence.*;
 
 @Entity
