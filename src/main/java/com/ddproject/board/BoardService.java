@@ -13,6 +13,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -40,9 +41,14 @@ public class BoardService {
 	public void updateBoard(Long boardId, BoardRequestDto boardRequestDto, BoardMember boardMember) {
 		Board board = boardRepository.findById(boardId)
 				.orElseThrow(() -> new IllegalArgumentException("해당 보드를 찾을 수 없습니다."));
-		boolean hasAdminAccess = board.getInvitedUsers().stream()
-				.anyMatch(member -> member.equals(boardMember) && member.isAdmin());
-		if (!hasAdminAccess) { throw new AccessDeniedException("수정 권한이 없습니다."); }
+
+		Optional<BoardMember> members = boardMemberRepository.findByBoard_Id(boardId);
+		boolean hasAdminAccess = members.stream()
+				.anyMatch(member -> member.getUser().getId().equals(user.getId()) && member.isAdmin());
+
+		if (!hasAdminAccess) {
+			throw new AccessDeniedException("수정 권한이 없습니다.");
+		}
 		board.update(boardRequestDto);
 	}
 
@@ -61,6 +67,19 @@ public class BoardService {
 		return userBoards.stream()
 				.map(BoardResponseDto::new)
 				.collect(Collectors.toList());
-	} // Memberreposi를 조회해서 User로 가입된 member의 board를 출력할것인지, UserBoard를 생성해서 따로 출력할것인지 회의.
+
+	 // Memberreposi를 조회해서 User로 가입된 member의 board를 출력할것인지, UserBoard를 생성해서 따로 출력할것인지 회의.
+
+	}
+
+
+	public List<Board> findBoardsByUserId(Long userId) {
+		Optional<BoardMember> members = boardMemberRepository.findByUserId(userId);
+		return members.stream()
+				.map(BoardMember::getBoard)
+				.distinct() // 중복 제거
+				.collect(Collectors.toList());
+	}
+
 
 }
