@@ -75,13 +75,6 @@ public class ColumnService {
             columnRepository.save(otherColumn);
         }
     }
-
-//JPA버젼
-//    public List<ColumnDto> getAllColumns(Long boardId) {
-//        List<Column> columns = columnRepository.findAll(); // 실제로는 boardId에 따라 필터링 필요
-//        return columns.stream().map(this::convertEntityToDto).collect(Collectors.toList());
-//    }
-
     public void deleteColumn(Long columnId) {
         columnRepository.deleteById(columnId);
     }
@@ -105,5 +98,11 @@ public class ColumnService {
 
         return columns.stream().map(this::convertEntityToDto).collect(Collectors.toList());
     }
+
+//JPA버젼
+//    public List<ColumnDto> getAllColumns(Long boardId) {
+//        List<Column> columns = columnRepository.findAll(); // 실제로는 boardId에 따라 필터링 필요
+//        return columns.stream().map(this::convertEntityToDto).collect(Collectors.toList());
+//    }
 
 }
