@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.ZonedDateTime;
+import java.util.UUID;
 
 @Entity
 @Getter
@@ -15,9 +16,9 @@ import java.time.ZonedDateTime;
 public class BoardMember {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "member_id")
-	private Long id;
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "member_id", updatable = false, nullable = false)
+	private UUID id;
 
 	@ManyToOne
 	@JoinColumn(name = "board_id")
@@ -28,27 +29,30 @@ public class BoardMember {
 	private User user;
 
 	@Column
-	@Enumerated(value = EnumType.STRING)
-	private BoardMemberEnum role;
+	@Enumerated(EnumType.STRING)
+	private BoardMemberEnum role = BoardMemberEnum.MEMBER;
 
 	@Enumerated(EnumType.STRING)
-	private BoardMemberStatus status;
+	private BoardMemberStatus status = BoardMemberStatus.ACTIVE;
 
 	@Column
 	private String nickname;
 
-
+	@Column
 	private ZonedDateTime accountCreationDate;
+
+	@Column
 	private ZonedDateTime lastNicknameUpdate;
-//	private String userStatus;
 
 	@PrePersist
 	protected void onCreate() {
 		accountCreationDate = ZonedDateTime.now();
 	}
 
-	public BoardMember(User user) {
+	public BoardMember(Board board, User user, String nickname) {
 		this.user = user;
+		this.board = board;
+		this.nickname = nickname;
 	}
 
 	public void updateNickname(String newNickname) {
