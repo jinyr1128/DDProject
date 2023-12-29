@@ -68,4 +68,13 @@ public class BoardMember {
 		return this.role == BoardMemberEnum.ADMIN;
 	}
 
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	public void setBoard(Board board) {
+		this.board = board;
+	}
+
+
 }

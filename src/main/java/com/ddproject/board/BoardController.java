@@ -2,6 +2,8 @@ package com.ddproject.board;
 
 import com.ddproject.board.dto.BoardRequestDto;
 import com.ddproject.board.dto.BoardResponseDto;
+import com.ddproject.board.entity.Board;
+import com.ddproject.member.BoardMember;
 import com.ddproject.user.domain.User;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
@@ -11,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import com.ddproject.user.domain.User;
+
 
 import java.util.List;
 
@@ -31,26 +34,26 @@ public class BoardController {
 	}
 
 	@Operation(summary = "보드 조회")
-	@GetMapping("/{boardid}")
-	public ResponseEntity<BoardResponseDto> getBoard(@PathVariable Long id, @AuthenticationPrincipal User user) {
-		BoardResponseDto responseDto = boardService.getBoard(id, user);
-		return ResponseEntity.ok(responseDto);
+	@GetMapping("/{boardId}")
+	public ResponseEntity<BoardResponseDto> getBoard(@PathVariable Long boardId, @AuthenticationPrincipal BoardMember boardMember) {
+		BoardResponseDto boardResponseDto = boardService.getBoard(boardId, boardMember);
+		return ResponseEntity.ok(boardResponseDto);
 	}
 
 	@Operation(summary = "보드 업데이트")
-	@PutMapping("/{boardid}")
-	public ResponseEntity<Void> updateBoard(@PathVariable Long id,
+	@PutMapping("/{boardId}")
+	public ResponseEntity<Void> updateBoard(@PathVariable Long boardId,
 											@Valid @RequestBody BoardRequestDto boardRequestDto,
-											@AuthenticationPrincipal User user) {
-		boardService.updateBoard(id, boardRequestDto, user);
+											@AuthenticationPrincipal BoardMember boardMember) {
+		boardService.updateBoard(boardId, boardRequestDto, boardMember);
 		return ResponseEntity.ok().build();
 	}
 
 	@Operation(summary = "보드 삭제")
-	@DeleteMapping("/{boardid}")
-	public ResponseEntity<Void> deleteBoard(@PathVariable Long id,
+	@DeleteMapping("/{boardId}")
+	public ResponseEntity<Void> deleteBoard(@PathVariable Long boardId,
 											@AuthenticationPrincipal User user) {
-		boardService.deleteBoard(id, user);
+		boardService.deleteBoard(boardId, user);
 		return ResponseEntity.ok().build();
 	}
 
