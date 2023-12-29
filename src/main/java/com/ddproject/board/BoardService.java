@@ -42,9 +42,8 @@ public class BoardService {
 		Board board = boardRepository.findById(boardId)
 				.orElseThrow(() -> new IllegalArgumentException("해당 보드를 찾을 수 없습니다."));
 
-		Optional<BoardMember> members = boardMemberRepository.findByBoard_Id(boardId);
-		boolean hasAdminAccess = members.stream()
-				.anyMatch(member -> member.getUser().getId().equals(user.getId()) && member.isAdmin());
+		boolean hasAdminAccess = board.getInvitedUsers().stream()
+				.anyMatch(member -> member.equals(boardMember) && member.isAdmin());
 
 		if (!hasAdminAccess) {
 			throw new AccessDeniedException("수정 권한이 없습니다.");
