@@ -5,14 +5,15 @@ import com.ddproject.board.dto.BoardResponseDto;
 import com.ddproject.board.entity.Board;
 import com.ddproject.member.BoardMember;
 
+import com.ddproject.member.BoardMemberRepository;
 import com.ddproject.user.domain.User;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -46,7 +47,7 @@ public class BoardService {
 		Board board = boardRepository.findById(boardId)
 				.orElseThrow(() -> new IllegalArgumentException("해당 보드를 찾을 수 없습니다."));
 
-		List<BoardMember> members = boardMemberRepository.findByBoard_Id(boardId);
+		Optional<BoardMember> members = boardMemberRepository.findByBoard_Id(boardId);
 		boolean hasAdminAccess = members.stream()
 				.anyMatch(member -> member.getUser().getId().equals(user.getId()) && member.isAdmin());
 
@@ -82,7 +83,7 @@ public class BoardService {
 
 
 	public List<Board> findBoardsByUserId(Long userId) {
-		List<BoardMember> members = boardMemberRepository.findByUserId(userId);
+		Optional<BoardMember> members = boardMemberRepository.findByUserId(userId);
 		return members.stream()
 				.map(BoardMember::getBoard)
 				.distinct() // 중복 제거
