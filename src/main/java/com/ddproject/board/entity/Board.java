@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 import java.time.ZonedDateTime;
 import java.util.Set;
 import java.util.UUID;
-
+ //1
 @Entity
 @Getter
 @NoArgsConstructor
@@ -26,43 +26,32 @@ public class Board {
 	private String boardDescription;
 	private String coverImageColor;
 	private ZonedDateTime createdAt;
-	private ZonedDateTime lastModifiedAt;
-	private boolean isDeleted;
+	private Long createdBy;
+//	private boolean isDeleted;
 
-	@ManyToOne
-	@JoinColumn(name = "createdBy")
-	private User createdBy;
+	@PrePersist
+	protected void onCreate() {
+		createdAt = ZonedDateTime.now();
+		if (boardKey == null) {
+			boardKey = UUID.randomUUID().toString();
+		}
+		if (coverImageColor == null) {
+			coverImageColor = "white";
+		}
+	}
 
 	@OneToMany(mappedBy = "board")
 	private Set<BoardMember> invitedUsers;
 
-	@PrePersist
-	protected void onCreate() {
-		this.createdAt = ZonedDateTime.now();
-		this.boardKey = (this.boardKey == null) ? UUID.randomUUID().toString() : this.boardKey;
-		this.coverImageColor = (this.coverImageColor == null) ? "white" : this.coverImageColor;
-	}
-
-	@PreUpdate
-	protected void onUpdate() {
-		this.lastModifiedAt = ZonedDateTime.now();
-	}
-
 	public Board(BoardRequestDto boardRequestDto, User user) {
 		this.boardTitle = boardRequestDto.getBoardTitle();
 		this.boardDescription = boardRequestDto.getBoardDescription();
-		this.createdBy = user;
-		this.isDeleted = false;
+		this.createdBy = user.getId();
 	}
 
 	public void update(BoardRequestDto boardRequestDto) {
 		this.boardTitle = boardRequestDto.getBoardTitle();
 		this.boardDescription = boardRequestDto.getBoardDescription();
-		this.lastModifiedAt = ZonedDateTime.now();
-	}
-
-	public void setIsDeleted() {
-		this.isDeleted = true;
 	}
 
 

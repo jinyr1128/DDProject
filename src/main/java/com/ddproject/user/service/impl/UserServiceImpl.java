@@ -7,7 +7,6 @@ import com.ddproject.global.exception.ErrorCode;
 import com.ddproject.user.domain.User;
 import com.ddproject.user.dto.CheckRequestDto;
 import com.ddproject.user.dto.PasswordDto;
-import com.ddproject.user.dto.SignupResponseDto;
 import com.ddproject.user.dto.SignupUserDto;
 import com.ddproject.user.repository.UserRepository;
 import com.ddproject.user.service.UserService;
@@ -17,6 +16,7 @@ import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,20 +36,17 @@ public class UserServiceImpl implements UserService {
 
     // TODO : implement
     @Override
-    public SignupResponseDto signup(SignupUserDto signupUserDto) {
-        userRepository.findByUsername(signupUserDto.getUsername()).ifPresent(it -> {
-            throw new CustomException(ErrorCode.DUPLICATED_USER_NAME, String.format("%s is duplicated", signupUserDto.getUsername()));
-        });
-
+    public SignupUserDto signup(String username, String email, String password) {
+//        userRepository.findByUsername(username).orElseThrow();
         User user = User.builder()
-                .username(signupUserDto.getUsername())
-                .password(passwordEncoder.encode(signupUserDto.getPassword()))
-                .email(signupUserDto.getEmail())
+                .username(username)
+                .password(passwordEncoder.encode(password))
+                .email(email)
                 .build();
 
         User savedUser = userRepository.save(user);
 
-        return modelMapper.map(savedUser, SignupResponseDto.class);
+        return modelMapper.map(savedUser, SignupUserDto.class);
     }
 
     @Override
@@ -75,13 +72,14 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findByUsername(username).orElseThrow();
 
         boolean isCorrect = passwordEncoder.matches(passwordDto.getCurrentPw(), user.getPassword());
-        
-        if (isCorrect && !passwordDto.getCurrentPw().equals(passwordDto.getChangePw())) {
-            user.changePw(passwordEncoder.encode(passwordDto.getChangePw()));
+        if (isCorrect) {
+            user.changePw(passwordDto.getChangePw());
             userRepository.save(user);
         } else {
-            throw new CustomException(ErrorCode.INVALID_PASSWORD);
+            throw new CustomException(ErrorCode.INVALID_PASSWORD, "failed");
         }
+
+
     }
 
     @Override

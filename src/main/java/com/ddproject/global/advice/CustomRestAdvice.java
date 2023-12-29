@@ -26,7 +26,7 @@ public class CustomRestAdvice {
     //컨트롤러 유효성 검증 예외처리 핸들러
     @ExceptionHandler(BindException.class)
     public ResponseEntity<?> handleBindException(BindException e) {
-        log.error("Error occurs {}", e.toString());
+        log.error(e);
 
         Map<String, String> errorMap = new HashMap<>();
 
