@@ -2,6 +2,11 @@ package com.ddproject.card.entity;
 
 import jakarta.persistence.*;
 import com.ddproject.column.entity.Column;
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 @Entity
 @Table(name = "cards")
 public class Card {
