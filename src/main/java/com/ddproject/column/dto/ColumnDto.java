@@ -1,5 +1,8 @@
 package com.ddproject.column.dto;
 
+import lombok.Data;
+
+@Data
 public class ColumnDto {
     private Long columnId;
     private String name;
