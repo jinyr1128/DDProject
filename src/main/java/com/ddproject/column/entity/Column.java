@@ -2,7 +2,11 @@ package com.ddproject.column.entity;
 
 import com.ddproject.board.entity.Board;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "columns")
 public class Column {
