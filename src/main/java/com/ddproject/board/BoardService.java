@@ -28,22 +28,17 @@ public class BoardService {
 		return new BoardResponseDto(board);
 	}
 
-	public BoardResponseDto getBoard(Long boardId, User user) {
+	public BoardResponseDto getBoard(Long boardId, BoardMember boardMember) {
 		Board board = boardRepository.findById(boardId)
 				.orElseThrow(() -> new IllegalArgumentException("해당 보드를 찾을 수 없습니다."));
-
-		boolean isMember = boardMemberRepository.findByBoard_Id(boardId).stream()
-				.anyMatch(member -> member.getUser().getId().equals(user.getId()));
-
-		if (!isMember) {
-			throw new AccessDeniedException("조회 권한이 없습니다.");
-		}
-
+		User user = boardMember.getUser();
+		boolean isMember = board.getInvitedUsers().stream().anyMatch(member -> member.getUser().equals(user));
+		if (!isMember) { throw new AccessDeniedException("조회 권한이 없습니다.");  }
 		return new BoardResponseDto(board);
 	}
 
 	@Transactional
-	public void updateBoard(Long boardId, BoardRequestDto boardRequestDto, User user) {
+	public void updateBoard(Long boardId, BoardRequestDto boardRequestDto, BoardMember boardMember) {
 		Board board = boardRepository.findById(boardId)
 				.orElseThrow(() -> new IllegalArgumentException("해당 보드를 찾을 수 없습니다."));
 
@@ -54,23 +49,16 @@ public class BoardService {
 		if (!hasAdminAccess) {
 			throw new AccessDeniedException("수정 권한이 없습니다.");
 		}
-
 		board.update(boardRequestDto);
 	}
 
-
 	@Transactional
-	public void deleteBoard(Long id, User user) {
-		Board board = boardRepository.findById(id)
+	public void deleteBoard(Long boardId, User user) {
+		Board board = boardRepository.findById(boardId)
 				.orElseThrow(() -> new IllegalArgumentException("해당 보드를 찾을 수 없습니다."));
-
-		if (!board.getCreatedBy().equals(user.getId())) {
-			throw new AccessDeniedException("삭제 권한이 없습니다.");
-		}
-
-		boardRepository.delete(board);
+		if (!board.getCreatedBy().equals(user)) { throw new AccessDeniedException("삭제 권한이 없습니다."); }
+		board.setIsDeleted();
 	}
-
 
 	public List<BoardResponseDto> getUserBoards(User user) {
 
@@ -79,6 +67,9 @@ public class BoardService {
 		return userBoards.stream()
 				.map(BoardResponseDto::new)
 				.collect(Collectors.toList());
+
+	 // Memberreposi를 조회해서 User로 가입된 member의 board를 출력할것인지, UserBoard를 생성해서 따로 출력할것인지 회의.
+
 	}
 
 
@@ -89,5 +80,6 @@ public class BoardService {
 				.distinct() // 중복 제거
 				.collect(Collectors.toList());
 	}
+
 
 }
