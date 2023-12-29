@@ -1,8 +1,11 @@
 package com.ddproject.card.dto;
 
 
+import lombok.Data;
+
 import java.util.List;
 
+@Data
 public class CardDto {
     private Long cardId;
     private String name;
