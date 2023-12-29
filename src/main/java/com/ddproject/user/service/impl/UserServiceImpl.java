@@ -1,5 +1,7 @@
 package com.ddproject.user.service.impl;
 
+import com.ddproject.alarm.dto.AlarmDto;
+import com.ddproject.alarm.repository.AlarmRepository;
 import com.ddproject.global.exception.CustomException;
 import com.ddproject.global.exception.ErrorCode;
 import com.ddproject.user.domain.User;
@@ -13,6 +15,8 @@ import com.ddproject.user.validation.SignupValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +31,7 @@ public class UserServiceImpl implements UserService {
     private final ModelMapper modelMapper;
     private final SignupValidator signupValidator;
     private final PasswordEncoder passwordEncoder;
+    private final AlarmRepository alarmRepository;
 
 
     // TODO : implement
@@ -77,5 +82,16 @@ public class UserServiceImpl implements UserService {
         } else {
             throw new CustomException(ErrorCode.INVALID_PASSWORD);
         }
+    }
+
+    @Override
+    public Page<AlarmDto> alarmList(String username, Pageable pageable) {
+        User user = userRepository.findByUsername(username).orElseThrow(() -> {
+            throw new CustomException(ErrorCode.USER_NOT_FOUND, String.format("%s not founded", username));
+        });
+
+        return alarmRepository.findAllByUser(user, pageable).map(alarm -> modelMapper.map(alarm, AlarmDto.class));
+
+
     }
 }
