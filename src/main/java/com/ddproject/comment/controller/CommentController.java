@@ -21,4 +21,30 @@ public class CommentController {
         this.commentService = commentService;
     }
 
+    @PostMapping
+    public ResponseEntity<CommentDto> createComment(@PathVariable Long cardId,
+                                                    @RequestBody CommentDto commentDto) {
+        CommentDto createdComment = commentService.createComment(cardId, commentDto);
+        return new ResponseEntity<>(createdComment, HttpStatus.CREATED);
+    }
+    @GetMapping
+    public ResponseEntity<List<CommentDto>> getCommentsByCardId(@PathVariable Long cardId) {
+        List<CommentDto> comments = commentService.getCommentsByCardId(cardId);
+        return ResponseEntity.ok(comments);
+    }
+
+    @PatchMapping("/{commentId}")
+    public ResponseEntity<CommentDto> updateComment(@PathVariable Long commentId,
+                                                    @RequestBody CommentDto commentDto,
+                                                    @AuthenticationPrincipal User user) {
+        CommentDto updatedComment = commentService.updateComment(commentId, commentDto, user.getId());
+        return ResponseEntity.ok(updatedComment);
+    }
+
+    @DeleteMapping("/{commentId}")
+    public ResponseEntity<Void> deleteComment(@PathVariable Long commentId,
+                                              @AuthenticationPrincipal User user) {
+        commentService.deleteComment(commentId, user.getId());
+        return ResponseEntity.ok().build();
+    }
 }
