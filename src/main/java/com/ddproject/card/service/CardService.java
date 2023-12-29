@@ -5,7 +5,7 @@ import com.ddproject.board.entity.Board;
 import com.ddproject.card.dto.CardDto;
 import com.ddproject.card.entity.Card;
 import com.ddproject.card.entity.QCard;
-import com.ddproject.card.repository.BoardMemberRepository2;
+import com.ddproject.member.BoardMemberRepository;
 import com.ddproject.card.repository.CardRepository;
 import com.ddproject.column.entity.Column;
 import com.ddproject.column.repository.ColumnRepository;
@@ -20,14 +20,14 @@ import java.util.Objects;
 @Service
 public class CardService {
     private final CardRepository cardRepository;
-    private final BoardMemberRepository2 boardMemberRepository;
+    private final BoardMemberRepository boardMemberRepository;
     private final ColumnRepository columnRepository;
     private final BoardRepository boardRepository;
     private final JPAQueryFactory queryFactory;
 
     @Autowired
     public CardService(CardRepository cardRepository,
-                       BoardMemberRepository2 boardMemberRepository,
+                       BoardMemberRepository boardMemberRepository,
                        ColumnRepository columnRepository,
                        BoardRepository boardRepository,
                        EntityManager entityManager) {
