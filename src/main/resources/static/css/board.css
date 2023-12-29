@@ -222,3 +222,6 @@
     background: -webkit-linear-gradient(to right, rgba(224, 224, 224, 1), rgba(105, 105, 105, 1));
     background: linear-gradient(to right, rgba(224, 224, 224, 1), rgba(105, 105, 105, 1));
 }
+.dragging {
+    opacity: 0.5;
+}
