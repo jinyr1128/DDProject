@@ -57,19 +57,18 @@ public class CustomSecurityConfig {
 
         http.authenticationManager(authenticationManager);
 
-        //로그인과 토큰생성을 처리하는 필터
         APILoginFilter apiLoginFilter = new APILoginFilter("/generateToken");
         apiLoginFilter.setAuthenticationManager(authenticationManager);
 
+        APILoginSuccessHandler apiLoginSuccessHandler = new APILoginSuccessHandler(jwtUtil);
+        apiLoginFilter.setAuthenticationSuccessHandler(apiLoginSuccessHandler);
+
         // username필터 이전으로 설정
-        http.addFilterBefore(tokenCheckFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
         http.addFilterBefore(apiLoginFilter, UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(tokenCheckFilter(jwtUtil, userDetailsService), UsernamePasswordAuthenticationFilter.class);
 
         http.addFilterBefore(new RefreshTokenFilter("/refreshToken", jwtUtil),
                 TokenCheckFilter.class);
-
-        APILoginSuccessHandler apiLoginSuccessHandler = new APILoginSuccessHandler(jwtUtil);
-        apiLoginFilter.setAuthenticationSuccessHandler(apiLoginSuccessHandler);
 
         http.csrf(config -> {
            config.disable();
@@ -82,7 +81,8 @@ public class CustomSecurityConfig {
         return http.build();
     }
 
-    private TokenCheckFilter tokenCheckFilter(JWTUtil jwtUtil) {
-        return new TokenCheckFilter(jwtUtil);
+    private TokenCheckFilter tokenCheckFilter(JWTUtil jwtUtil, UserDetailsService userDetailsService) {
+        return new TokenCheckFilter(userDetailsService, jwtUtil);
+
     }
 }

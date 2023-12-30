@@ -3,6 +3,7 @@ package com.ddproject.user.service;
 import com.ddproject.user.domain.User;
 import com.ddproject.user.dto.CheckRequestDto;
 import com.ddproject.user.dto.PasswordDto;
+import com.ddproject.user.dto.SignupUserDto;
 import com.ddproject.user.repository.UserRepository;
 import com.ddproject.user.validation.SignupValidator;
 import org.junit.jupiter.api.Test;
@@ -34,11 +35,16 @@ class UserServiceTest {
         String username = "username";
         String email = "useremail";
         String password = "password";
+        SignupUserDto signupUserDto = SignupUserDto.builder()
+                .username(username)
+                .email(email)
+                .password(password)
+                .build();
 
         when(userRepository.save(any())).thenReturn(mock(User.class));
         when(passwordEncoder.encode(password)).thenReturn("encodedPassword");
 
-        assertThatCode(() -> sut.signup(username, email, passwordEncoder.encode(password))).doesNotThrowAnyException();
+        assertThatCode(() -> sut.signup(signupUserDto)).doesNotThrowAnyException();
     }
 
     @Test
