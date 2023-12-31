@@ -56,7 +56,10 @@ public class UserController {
 
     @Operation(summary = "패스워드 변경 API", description = "패스워드 변경 API")
     @PutMapping(value = "/password", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public Response<Void> changePw(@RequestBody PasswordDto passwordDto, @Parameter(hidden = true) @AuthenticationPrincipal UserDetails userDetails) {
+    public Response<Void> changePw(@Valid @RequestBody PasswordDto passwordDto, BindingResult bindingResult, @AuthenticationPrincipal UserDetails userDetails) throws BindException {
+        if (bindingResult.hasErrors()) {
+            throw new BindException(bindingResult);
+        }
 
         log.info(userDetails);
         userService.changePw(passwordDto, userDetails.getUsername());
@@ -70,6 +73,7 @@ public class UserController {
 
         return Response.success(userService.alarmList(userDetails.getUsername(), pageable));
     }
+
     @GetMapping("/alarm/subscribe")
     public SseEmitter subscribe(@AuthenticationPrincipal UserDetails userDetails) {
         return alarmService.connectAlarm(userDetails.getUsername());
