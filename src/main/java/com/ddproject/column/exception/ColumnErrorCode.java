@@ -22,4 +22,5 @@ public enum ColumnErrorCode {
         this.status = status;
         this.message = message;
     }
+
 }
