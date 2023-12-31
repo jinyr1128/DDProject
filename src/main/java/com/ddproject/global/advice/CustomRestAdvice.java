@@ -20,8 +20,9 @@ public class CustomRestAdvice {
     @ExceptionHandler(CustomException.class)
     public ResponseEntity<?> applicationHandler(CustomException e) {
         log.error("Error occurs {}", e.toString());
+
         return ResponseEntity.status(e.getErrorCode().getStatus())
-                .body(Response.error(e.getErrorCode().name()));
+                .body(Response.error(e.getErrorCode().name(), e.getMsg()));
     }
     //컨트롤러 유효성 검증 예외처리 핸들러
     @ExceptionHandler(BindException.class)
