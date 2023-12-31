@@ -16,9 +16,9 @@ public class AccessTokenException extends RuntimeException{
     public enum TOKEN_ERROR {
         UNACCEPT(HttpStatus.UNAUTHORIZED, "Token is null or too short"),
         BADTYPE(HttpStatus.UNAUTHORIZED, "Token type Bearer"),
-        MALFORM(HttpStatus.FORBIDDEN, "Malformed Token"),
-        BADSIGN(HttpStatus.FORBIDDEN, "BadSignatured Token"),
-        EXPIRED(HttpStatus.FORBIDDEN, "Expired Token ");
+        MALFORM(HttpStatus.UNAUTHORIZED, "Malformed Token"),
+        BADSIGN(HttpStatus.UNAUTHORIZED, "BadSignatured Token"),
+        EXPIRED(HttpStatus.UNAUTHORIZED, "Expired Token ");
 
         private HttpStatus status;
         private String msg;
