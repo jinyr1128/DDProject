@@ -76,14 +76,16 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findByUsername(username).orElseThrow();
 
         boolean isCorrect = passwordEncoder.matches(passwordDto.getCurrentPw(), user.getPassword());
-        if (isCorrect) {
-            user.changePw(passwordDto.getChangePw());
-            userRepository.save(user);
-        } else {
-            throw new CustomException(ErrorCode.INVALID_PASSWORD, "failed");
+        if (!isCorrect) {
+            throw new CustomException(ErrorCode.INVALID_PASSWORD, "비밀번호를 확인해주세요");
         }
 
+        if (!passwordDto.getCurrentPw().equals(passwordDto.getChangePw())) {
+            throw new CustomException(ErrorCode.INVALID_PASSWORD, "현재 패스워드와 같습니다.");
+        }
 
+        user.changePw(passwordEncoder.encode(passwordDto.getChangePw()));
+        userRepository.save(user);
     }
 
     @Override

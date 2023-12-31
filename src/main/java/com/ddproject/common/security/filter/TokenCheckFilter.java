@@ -57,15 +57,13 @@ public class TokenCheckFilter extends OncePerRequestFilter {
         } catch (AccessTokenException accessTokenException) {
             accessTokenException.sendResponseError(response);
         }
-
-        filterChain.doFilter(request, response);
     }
 
     private Map<String, Object> validateAccessToken(HttpServletRequest request) throws AccessTokenException {
         String headerStr = request.getHeader("Authorization");
 
         if (headerStr == null || headerStr.length() < 8) {
-            throw new AccessTokenException(AccessTokenException.TOKEN_ERROR.BADTYPE);
+            throw new AccessTokenException(AccessTokenException.TOKEN_ERROR.UNACCEPT);
         }
 
         String tokenType = headerStr.substring(0, 6);
