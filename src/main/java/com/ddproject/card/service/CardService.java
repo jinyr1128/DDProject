@@ -5,18 +5,21 @@ import com.ddproject.board.entity.Board;
 import com.ddproject.card.dto.CardDto;
 import com.ddproject.card.entity.Card;
 import com.ddproject.card.entity.QCard;
+import com.ddproject.card.exception.CardErrorCode;
+import com.ddproject.card.exception.CardException;
 import com.ddproject.member.BoardMemberRepository;
 import com.ddproject.card.repository.CardRepository;
 import com.ddproject.column.entity.Column;
 import com.ddproject.column.repository.ColumnRepository;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Objects;
-
+@RequiredArgsConstructor
 @Service
 public class CardService {
     private final CardRepository cardRepository;
@@ -25,34 +28,19 @@ public class CardService {
     private final BoardRepository boardRepository;
     private final JPAQueryFactory queryFactory;
 
-    @Autowired
-    public CardService(CardRepository cardRepository,
-                       BoardMemberRepository boardMemberRepository,
-                       ColumnRepository columnRepository,
-                       BoardRepository boardRepository,
-                       EntityManager entityManager) {
-        this.cardRepository = cardRepository;
-        this.boardMemberRepository = boardMemberRepository;
-        this.columnRepository = columnRepository;
-        this.boardRepository = boardRepository;
-        this.queryFactory = new JPAQueryFactory(entityManager);
-    }
-
     public boolean isUserAllowedToAccessCard(Long columnId, Long userId) {
         Column column = columnRepository.findById(columnId)
-                .orElseThrow(() -> new RuntimeException("Column not found"));
+                .orElseThrow(() -> new CardException(CardErrorCode.COLUMN_NOT_FOUND));
         Long boardId = column.getBoard().getId();
         return boardMemberRepository.existsByBoardIdAndUserId(boardId, userId);
     }
 
-
     @Transactional
     public CardDto createCard(Long boardId, Long columnId, CardDto cardDto) {
-        // 보드와 칼럼 존재 여부 확인
         Board board = boardRepository.findById(boardId)
-                .orElseThrow(() -> new RuntimeException("Board not found"));
+                .orElseThrow(() -> new CardException(CardErrorCode.BOARD_NOT_FOUND));
         Column column = columnRepository.findById(columnId)
-                .orElseThrow(() -> new RuntimeException("Column not found"));
+                .orElseThrow(() -> new CardException(CardErrorCode.COLUMN_NOT_FOUND));
 
         // 카드 객체 생성 및 저장
         Card card = new Card();
@@ -73,7 +61,7 @@ public class CardService {
     @Transactional
     public void updateCardSequence(Long cardId, int newSequence) {
         Card card = cardRepository.findById(cardId)
-                .orElseThrow(() -> new RuntimeException("Card not found"));
+                .orElseThrow(() -> new CardException(CardErrorCode.CARD_NOT_FOUND));
 
         int oldSequence = card.getSequence();
         Long columnId = card.getColumn().getId();
@@ -146,13 +134,13 @@ public class CardService {
             } else {
                 return null;
             }
-        }).orElse(null);
+        }).orElseThrow(() -> new CardException(CardErrorCode.CARD_NOT_FOUND));
     }
 
     @Transactional
     public boolean deleteCard(Long cardId) {
         if (!cardRepository.existsById(cardId)) {
-            return false;
+            throw new CardException(CardErrorCode.CARD_NOT_FOUND);
         }
         cardRepository.deleteById(cardId);
         return true;
@@ -161,9 +149,9 @@ public class CardService {
     @Transactional
     public void moveCardToAnotherColumn(Long cardId, Long newColumnId, int newSequence) {
         Card card = cardRepository.findById(cardId)
-                .orElseThrow(() -> new RuntimeException("Card not found"));
+                .orElseThrow(() -> new CardException(CardErrorCode.CARD_NOT_FOUND));
         Column newColumn = columnRepository.findById(newColumnId)
-                .orElseThrow(() -> new RuntimeException("Column not found"));
+                .orElseThrow(() -> new CardException(CardErrorCode.COLUMN_NOT_FOUND));
 
         card.setColumn(newColumn);
         card.setSequence(newSequence);
