@@ -1,6 +1,6 @@
 package com.ddproject.common.security.filter;
 
-import com.ddproject.common.security.UserDetailsService;
+import com.ddproject.common.security.UserDetailsServiceImpl;
 import com.ddproject.common.security.exception.AccessTokenException;
 import com.ddproject.common.util.JWTUtil;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -25,7 +25,7 @@ import java.util.Map;
 @Log4j2
 @RequiredArgsConstructor
 public class TokenCheckFilter extends OncePerRequestFilter {
-    private final UserDetailsService userDetailsService;
+    private final UserDetailsServiceImpl userDetailsServiceImpl;
     private final JWTUtil jwtUtil;
 
     @Override
@@ -45,7 +45,7 @@ public class TokenCheckFilter extends OncePerRequestFilter {
             String username = (String) payload.get("username");
             log.info("username: " + username);
 
-            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+            UserDetails userDetails = userDetailsServiceImpl.loadUserByUsername(username);
 
             UsernamePasswordAuthenticationToken authenticationToken =
                     new UsernamePasswordAuthenticationToken(
