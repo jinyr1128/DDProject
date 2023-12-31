@@ -4,6 +4,8 @@ import com.ddproject.card.entity.Card;
 import com.ddproject.card.repository.CardRepository;
 import com.ddproject.comment.dto.CommentDto;
 import com.ddproject.comment.entity.Comment;
+import com.ddproject.comment.exception.CommentErrorCode;
+import com.ddproject.comment.exception.CommentException;
 import com.ddproject.comment.repository.CommentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,10 +24,9 @@ public class CommentService {
         this.commentRepository = commentRepository;
         this.cardRepository = cardRepository;
     }
-
     public CommentDto createComment(Long cardId, CommentDto commentDto) {
         Card card = cardRepository.findById(cardId)
-                .orElseThrow(() -> new RuntimeException("Card not found"));
+                .orElseThrow(() -> new CommentException(CommentErrorCode.CARD_NOT_FOUND));
 
         Comment comment = new Comment();
         comment.setCard(card);
@@ -44,10 +45,10 @@ public class CommentService {
     @Transactional
     public CommentDto updateComment(Long commentId, CommentDto commentDto, Long userId) {
         Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new RuntimeException("Comment not found"));
+                .orElseThrow(() -> new CommentException(CommentErrorCode.COMMENT_NOT_FOUND));
 
         if (!comment.getAuthorId().equals(userId)) {
-            throw new RuntimeException("Only the author can update the comment");
+            throw new CommentException(CommentErrorCode.UNAUTHORIZED_COMMENT_ACCESS);
         }
 
         comment.setText(commentDto.getText());
@@ -58,10 +59,10 @@ public class CommentService {
     @Transactional
     public void deleteComment(Long commentId, Long userId) {
         Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new RuntimeException("Comment not found"));
+                .orElseThrow(() -> new CommentException(CommentErrorCode.COMMENT_NOT_FOUND));
 
         if (!comment.getAuthorId().equals(userId)) {
-            throw new RuntimeException("Only the author can delete the comment");
+            throw new CommentException(CommentErrorCode.UNAUTHORIZED_COMMENT_ACCESS);
         }
 
         commentRepository.deleteById(commentId);
