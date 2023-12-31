@@ -21,6 +21,13 @@ public class MemberController {
 
 	private final MemberService memberService;
 
+	//멤버 초대
+	@Operation(summary = "관리자로부터 멤버 초대")
+	@PostMapping("/inviteMember")
+	public ResponseEntity<String> inviteMember(@Valid @RequestBody ) {
+
+	}
+
 	// 멤버 생성
 	@Operation(summary = "멤버 생성")
 	@PostMapping("/createMember")
@@ -44,7 +51,7 @@ public class MemberController {
 		}
 	}
 
-//	public ResponseEntity<String>
+
 
 }
 

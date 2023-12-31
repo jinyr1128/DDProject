@@ -30,7 +30,7 @@ public class Board {
 	private boolean isDeleted;
 
 	@ManyToOne
-	@JoinColumn(name = "createdBy")
+	@JoinColumn(name = "created_by")
 	private User createdBy;
 
 	@OneToMany(mappedBy = "board")

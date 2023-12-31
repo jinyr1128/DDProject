@@ -19,6 +19,8 @@ public class MemberService {
 	private UserRepository userRepository;
 	private BoardRepository boardRepository;
 
+
+
 	public void createMember(MemberRequestDto memberRequestDto, User user, Board board) {
 
 		Optional<BoardMember> existingMember = boardMemberRepository.findByBoardAndUser(board, user);
@@ -43,10 +45,7 @@ public class MemberService {
 			throw new IllegalArgumentException("해당 사용자의 멤버 정보가 없습니다.");
 		}
 
-		BoardMember boardMember = findMember.get();
-		if (boardMember.getRole() != BoardMemberEnum.ADMIN) {
-			throw new AccessDeniedException("수정 권한이 없습니다. 관리자만 수정 가능합니다.");
-		}
+
 
 		String newNickname = memberRequestDto.getMemberName();
 		boardMember.updateNickname(newNickname);

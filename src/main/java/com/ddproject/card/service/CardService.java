@@ -9,6 +9,7 @@ import com.ddproject.member.BoardMemberRepository;
 import com.ddproject.card.repository.CardRepository;
 import com.ddproject.column.entity.Column;
 import com.ddproject.column.repository.ColumnRepository;
+import com.ddproject.member.BoardMemberRepository;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;

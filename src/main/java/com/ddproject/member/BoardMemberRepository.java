@@ -1,11 +1,9 @@
 package com.ddproject.member;
 
 import com.ddproject.board.entity.Board;
-import com.ddproject.member.BoardMember;
 import com.ddproject.user.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.List;
 import java.util.Optional;
 
 public interface BoardMemberRepository extends JpaRepository<BoardMember, Long> {

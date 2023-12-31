@@ -6,6 +6,7 @@ import com.ddproject.board.entity.Board;
 import com.ddproject.member.BoardMember;
 
 import com.ddproject.member.BoardMemberRepository;
+import com.ddproject.member.MemberService;
 import com.ddproject.user.domain.User;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -22,9 +23,14 @@ public class BoardService {
 
 	private final BoardRepository boardRepository;
 	private final BoardMemberRepository boardMemberRepository;
+	private final MemberService memberService;
 
 	public BoardResponseDto createBoard(BoardRequestDto boardRequestDto, User user) {
 		Board board = boardRepository.save(new Board(boardRequestDto, user));
+
+		BoardMember createUserMember = new BoardMember(board, user, user.getUsername());
+		boardRepository.save(createUserMember);
+
 		return new BoardResponseDto(board);
 	}
 

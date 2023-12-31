@@ -3,6 +3,7 @@ package com.ddproject.board;
 import com.ddproject.board.dto.BoardRequestDto;
 import com.ddproject.board.dto.BoardResponseDto;
 import com.ddproject.board.entity.Board;
+import com.ddproject.common.security.UserDetailsImpl;
 import com.ddproject.member.BoardMember;
 import com.ddproject.user.domain.User;
 import io.swagger.v3.oas.annotations.Operation;
@@ -20,7 +21,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/boars")
+@RequestMapping("/api/v1/board")
 public class BoardController {
 
 	private final BoardService boardService;
@@ -28,8 +29,8 @@ public class BoardController {
 	@Operation(summary = "보드 생성")
 	@PostMapping
 	public ResponseEntity<BoardResponseDto> createBoard(@Valid @RequestBody BoardRequestDto boardRequestDto,
-														@AuthenticationPrincipal User user) {
-		BoardResponseDto responseDto = boardService.createBoard(boardRequestDto, user);
+														@AuthenticationPrincipal UserDetailsImpl userDetails) {
+		BoardResponseDto responseDto = boardService.createBoard(boardRequestDto, userDetails.getUser());
 		return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
 	}
 
