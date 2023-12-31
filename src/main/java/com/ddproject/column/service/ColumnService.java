@@ -2,11 +2,14 @@ package com.ddproject.column.service;
 
 import com.ddproject.column.dto.ColumnDto;
 import com.ddproject.column.entity.Column;
+import com.ddproject.column.exception.ColumnErrorCode;
+import com.ddproject.column.exception.ColumnException;
 import com.ddproject.column.repository.ColumnRepository;
 import com.ddproject.board.BoardRepository;
 import com.ddproject.board.entity.Board;
 import com.ddproject.column.repository.CustomColumnRepository;
 import com.ddproject.column.repository.CustomColumnRepositoryImpl;
+import com.ddproject.global.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,7 +31,7 @@ public class ColumnService {
         column.setSequence(columnDto.getSequence());
 
         Board board = boardRepository.findById(columnDto.getBoardId())
-                .orElseThrow(() -> new RuntimeException("Board not found"));
+                .orElseThrow(() -> new ColumnException(ColumnErrorCode.BOARD_NOT_FOUND));
         column.setBoard(board);
 
         Column savedColumn = columnRepository.save(column);
@@ -37,7 +40,7 @@ public class ColumnService {
 
     public ColumnDto updateColumnName(Long columnId, String newName) {
         Column column = columnRepository.findById(columnId)
-                .orElseThrow(() -> new RuntimeException("Column not found"));
+                .orElseThrow(() -> new ColumnException(ColumnErrorCode.COLUMN_NOT_FOUND));
         column.setName(newName);
         Column updatedColumn = columnRepository.save(column);
         return convertEntityToDto(updatedColumn);
@@ -45,7 +48,7 @@ public class ColumnService {
 
     public ColumnDto updateColumnSequence(Long columnId, Integer newSequence) {
         Column column = columnRepository.findById(columnId)
-                .orElseThrow(() -> new RuntimeException("Column not found"));
+                .orElseThrow(() -> new ColumnException(ColumnErrorCode.COLUMN_NOT_FOUND));
         column.setSequence(newSequence);
 
         List<Column> otherColumns = customColumnRepository.findColumnsWithSequenceGreaterThanOrEqual(
