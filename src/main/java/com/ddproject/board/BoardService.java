@@ -26,9 +26,12 @@ public class BoardService {
 	private final MemberService memberService;
 
 	public BoardResponseDto createBoard(BoardRequestDto boardRequestDto, User user) {
-		Board board = boardRepository.save(new Board(boardRequestDto, user));
+		Board board = new Board(boardRequestDto, user);
+		board = boardRepository.save(board);
+
 		BoardMember createUserMember = new BoardMember(board, user, user.getUsername());
-		boardRepository.save(createUserMember);
+		boardMemberRepository.save(createUserMember);
+
 		return new BoardResponseDto(board);
 	}
 

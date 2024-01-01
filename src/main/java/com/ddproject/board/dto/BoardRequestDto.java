@@ -10,7 +10,7 @@ public class BoardRequestDto {
 
 	@Size(max = 30, message = "제목은 최대 30자까지 작성 가능합니다.")
 	private String boardTitle;
-	private String boardDescription;
-	private String createdBy;
 
+	@Size(max = 250, message = "보드 설명은 최대 250자까지 작성 가능합니다.")
+	private String boardDescription;
 }

@@ -8,13 +8,11 @@ import java.util.Optional;
 
 public interface BoardMemberRepository extends JpaRepository<BoardMember, Long> {
 
-	Optional<BoardMember> findByNickname(String nickname);
 
 	Optional<BoardMember> findByUserId(Long userId);
 
 	Optional<BoardMember> findMemberById(Long memberId);
 
-	Optional<BoardMember> findByBoardAndMember(Board board, BoardMember boardMember);
 
 	Optional<BoardMember> findByBoard_Id(Long boardId);
 
