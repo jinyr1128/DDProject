@@ -4,6 +4,7 @@ import com.ddproject.card.dto.CardDto;
 import com.ddproject.card.entity.Card;
 import com.ddproject.card.service.CardService;
 import com.ddproject.user.domain.User;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,7 @@ public class CardController {
         this.cardService = cardService;
     }
 
+    @Operation(summary = "칼드 생성")
     @PostMapping
     public ResponseEntity<?> createCard(@PathVariable Long boardId,
                                         @PathVariable Long columnId,
@@ -33,6 +35,7 @@ public class CardController {
         return new ResponseEntity<>(createdCard, HttpStatus.CREATED);
     }
 
+    @Operation(summary = "카드 시퀀스 업데이트")
     @PatchMapping("/{cardId}/sequence")
     public ResponseEntity<?> updateCardSequence(@PathVariable Long columnId,
                                                 @PathVariable Long cardId,
@@ -45,6 +48,7 @@ public class CardController {
         return ResponseEntity.ok().build();
     }
 
+    @Operation(summary = "카드 업데이트")
     @PatchMapping("/{cardId}")
     public ResponseEntity<?> updateCard(@PathVariable Long cardId,
                                         @RequestBody CardDto cardDto) {
@@ -52,12 +56,14 @@ public class CardController {
         return updatedCard != null ? ResponseEntity.ok().build() : ResponseEntity.notFound().build();
     }
 
+    @Operation(summary = "카드 삭제")
     @DeleteMapping("/{cardId}")
     public ResponseEntity<?> deleteCard(@PathVariable Long cardId) {
         boolean deleted = cardService.deleteCard(cardId);
         return deleted ? ResponseEntity.ok().build() : ResponseEntity.notFound().build();
     }
 
+    @Operation(summary = "카드 위치 변경")
     @PatchMapping("/{cardId}/move")
     public ResponseEntity<?> moveCard(@PathVariable Long cardId,
                                       @RequestParam Long newColumnId,
