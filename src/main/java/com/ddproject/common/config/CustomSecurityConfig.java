@@ -1,6 +1,6 @@
 package com.ddproject.common.config;
 
-import com.ddproject.common.security.UserDetailsService;
+import com.ddproject.common.security.UserDetailsServiceImpl;
 import com.ddproject.common.security.filter.APILoginFilter;
 import com.ddproject.common.security.filter.RefreshTokenFilter;
 import com.ddproject.common.security.filter.TokenCheckFilter;
@@ -27,7 +27,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Log4j2
 @RequiredArgsConstructor
 public class CustomSecurityConfig {
-    private final UserDetailsService userDetailsService;
+    private final UserDetailsServiceImpl userDetailsServiceImpl;
     private final JWTUtil jwtUtil;
 
     @Bean
@@ -49,7 +49,7 @@ public class CustomSecurityConfig {
                 http.getSharedObject(AuthenticationManagerBuilder.class);
 
         authenticationManagerBuilder
-                .userDetailsService(userDetailsService)
+                .userDetailsService(userDetailsServiceImpl)
                 .passwordEncoder(passwordEncoder());
 
         AuthenticationManager authenticationManager =
@@ -65,7 +65,7 @@ public class CustomSecurityConfig {
 
         // username필터 이전으로 설정
         http.addFilterBefore(apiLoginFilter, UsernamePasswordAuthenticationFilter.class);
-        http.addFilterBefore(tokenCheckFilter(jwtUtil, userDetailsService), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(tokenCheckFilter(jwtUtil, userDetailsServiceImpl), UsernamePasswordAuthenticationFilter.class);
 
         http.addFilterBefore(new RefreshTokenFilter("/refreshToken", jwtUtil),
                 TokenCheckFilter.class);
@@ -81,7 +81,8 @@ public class CustomSecurityConfig {
         return http.build();
     }
 
-    private TokenCheckFilter tokenCheckFilter(JWTUtil jwtUtil, UserDetailsService userDetailsService) {
-        return new TokenCheckFilter(userDetailsService, jwtUtil);
+    private TokenCheckFilter tokenCheckFilter(JWTUtil jwtUtil, UserDetailsServiceImpl userDetailsServiceImpl) {
+        return new TokenCheckFilter(userDetailsServiceImpl, jwtUtil);
+
     }
 }

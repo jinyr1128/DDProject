@@ -2,9 +2,7 @@ package com.ddproject.board;
 
 import com.ddproject.board.dto.BoardRequestDto;
 import com.ddproject.board.dto.BoardResponseDto;
-import com.ddproject.board.entity.Board;
 import com.ddproject.common.security.UserDetailsImpl;
-import com.ddproject.member.BoardMember;
 import com.ddproject.user.domain.User;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
@@ -13,7 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import com.ddproject.user.domain.User;
 
 
 import java.util.List;
@@ -35,26 +32,26 @@ public class BoardController {
 	}
 
 	@Operation(summary = "보드 조회")
-	@GetMapping("/{boardId}")
-	public ResponseEntity<BoardResponseDto> getBoard(@PathVariable Long boardId, @AuthenticationPrincipal BoardMember boardMember) {
-		BoardResponseDto boardResponseDto = boardService.getBoard(boardId, boardMember);
-		return ResponseEntity.ok(boardResponseDto);
+	@GetMapping("/{boardid}")
+	public ResponseEntity<BoardResponseDto> getBoard(@PathVariable Long id, @AuthenticationPrincipal User user) {
+		BoardResponseDto responseDto = boardService.getBoard(id, user);
+		return ResponseEntity.ok(responseDto);
 	}
 
 	@Operation(summary = "보드 업데이트")
-	@PutMapping("/{boardId}")
-	public ResponseEntity<Void> updateBoard(@PathVariable Long boardId,
+	@PutMapping("/{boardid}")
+	public ResponseEntity<Void> updateBoard(@PathVariable Long id,
 											@Valid @RequestBody BoardRequestDto boardRequestDto,
-											@AuthenticationPrincipal BoardMember boardMember) {
-		boardService.updateBoard(boardId, boardRequestDto, boardMember);
+											@AuthenticationPrincipal User user) {
+		boardService.updateBoard(id, boardRequestDto, user);
 		return ResponseEntity.ok().build();
 	}
 
 	@Operation(summary = "보드 삭제")
-	@DeleteMapping("/{boardId}")
-	public ResponseEntity<Void> deleteBoard(@PathVariable Long boardId,
+	@DeleteMapping("/{boardid}")
+	public ResponseEntity<Void> deleteBoard(@PathVariable Long id,
 											@AuthenticationPrincipal User user) {
-		boardService.deleteBoard(boardId, user);
+		boardService.deleteBoard(id, user);
 		return ResponseEntity.ok().build();
 	}
 

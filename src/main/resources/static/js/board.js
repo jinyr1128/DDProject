@@ -62,5 +62,55 @@ function addNewColumn() {
     var board = document.querySelector(".board");
     board.insertBefore(newColumn, board.lastElementChild);
 }
+document.addEventListener('DOMContentLoaded', () => {
+    const cards = document.querySelectorAll('.card');
+    const columns = document.querySelectorAll('.column');
 
+    // 카드 드래그 앤 드롭 이벤트 설정
+    cards.forEach(card => {
+        card.addEventListener('dragstart', handleDragStart);
+        card.addEventListener('dragend', handleDragEnd);
+    });
+
+    // 칼럼 드래그 앤 드롭 이벤트 설정
+    columns.forEach(column => {
+        column.addEventListener('dragover', handleDragOver);
+        column.addEventListener('drop', handleDrop);
+    });
+});
+
+function handleDragStart(e) {
+    e.dataTransfer.setData('text/plain', e.target.dataset.cardId || e.target.parentElement.dataset.columnId);
+    this.classList.add('dragging');
+}
+
+function handleDragEnd() {
+    this.classList.remove('dragging');
+}
+
+function handleDragOver(e) {
+    e.preventDefault();
+}
+
+function handleDrop(e) {
+    e.preventDefault();
+    const draggedId = e.dataTransfer.getData('text/plain');
+    const draggedElement = document.querySelector(`[data-card-id="${draggedId}"], [data-column-id="${draggedId}"]`);
+
+    if (draggedElement.classList.contains('card')) {
+        // 카드 드롭 로직
+        const dropZone = e.target.closest('.column');
+        if (dropZone) {
+            dropZone.appendChild(draggedElement);
+        }
+    } else if (draggedElement.classList.contains('column')) {
+        // 칼럼 드롭 로직
+        const board = document.querySelector('.board');
+        board.insertBefore(draggedElement, e.target.closest('.column').nextSibling);
+    }
+}
+//function updatePositionOnServer(draggedId, newColumnId, newPosition) {
+//     // AJAX 요청을 사용하여 서버에 위치 변경 정보를 전송
+//     // 예시: axios.post('/api/updatePosition', { draggedId, newColumnId, newPosition });
+// }
 
