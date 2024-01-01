@@ -25,18 +25,18 @@ public class BoardController {
 
 	@Operation(summary = "보드 생성")
 	@PostMapping
-	public ResponseEntity<BoardResponseDto> createBoard(@Valid @RequestBody BoardRequestDto boardRequestDto,
-														@AuthenticationPrincipal UserDetailsImpl userDetails) {
+	public ResponseEntity<Response<BoardResponseDto>> createBoard(@Valid @RequestBody BoardRequestDto boardRequestDto,
+																  @AuthenticationPrincipal UserDetailsImpl userDetails) {
 		BoardResponseDto responseDto = boardService.createBoard(boardRequestDto, userDetails.getUser());
-		return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
+		return ResponseEntity.status(HttpStatus.CREATED).body(Response.success(responseDto));
 	}
 
 	@Operation(summary = "보드 조회")
 	@GetMapping("/{boardId}")
-	public ResponseEntity<BoardResponseDto> getBoard(@PathVariable Long boardId,
-													 @AuthenticationPrincipal UserDetailsImpl userDetails) {
+	public ResponseEntity<Response<BoardResponseDto>> getBoard(@PathVariable Long boardId,
+															   @AuthenticationPrincipal UserDetailsImpl userDetails) {
 		BoardResponseDto responseDto = boardService.getBoard(boardId, userDetails);
-		return ResponseEntity.ok(responseDto);
+		return ResponseEntity.ok(Response.success(responseDto));
 	}
 
 	@Operation(summary = "보드 업데이트")
