@@ -8,11 +8,9 @@ import java.util.Optional;
 
 public interface BoardMemberRepository extends JpaRepository<BoardMember, Long> {
 
-
 	Optional<BoardMember> findByUserId(Long userId);
 
 	Optional<BoardMember> findMemberById(Long memberId);
-
 
 	Optional<BoardMember> findByBoard_Id(Long boardId);
 
@@ -24,4 +22,5 @@ public interface BoardMemberRepository extends JpaRepository<BoardMember, Long> 
 	Optional<Object> findByBoard_IdAndUser_Id(Long boardId, Long id);
 
 	boolean existsByBoardIdAndUserIdAndRole(Long boardId, Long id, BoardMemberEnum boardMemberEnum);
+
 }

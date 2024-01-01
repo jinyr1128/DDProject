@@ -77,23 +77,4 @@ public class BoardController {
 		return ResponseEntity.ok(boards);
 	}
 
-
-//
-//	@Operation(summary = "보드 삭제")
-//	@DeleteMapping("/{boardid}")
-//	public ResponseEntity<Void> deleteBoard(@PathVariable Long id,
-//											@AuthenticationPrincipal User user) {
-//		boardService.deleteBoard(id, user);
-//		return ResponseEntity.ok().build();
-//	}
-//
-//	@Operation(summary = "사용자의 모든 보드 조회")
-//	@GetMapping
-//	public ResponseEntity<List<BoardResponseDto>> getUserBoards(@AuthenticationPrincipal User user) {
-//		List<BoardResponseDto> boards = boardService.getUserBoards(user);
-//		return ResponseEntity.ok(boards);
-//	}
-
-
-
 }
