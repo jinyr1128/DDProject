@@ -64,9 +64,11 @@ public class BoardController {
 			boardService.deleteBoard(boardId, userDetails);
 			return ResponseEntity.ok(Response.success("보드가 성공적으로 삭제되었습니다."));
 		} catch (AccessDeniedException e) {
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Response.error("401", "삭제 권한이 없습니다."));
+			return ResponseEntity.status(HttpStatus.FORBIDDEN)
+					.body(Response.error("403", "삭제 권한이 없습니다."));
 		} catch (EntityNotFoundException e) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Response.error("404", "해당 보드를 찾을 수 없습니다."));
+			return ResponseEntity.status(HttpStatus.NOT_FOUND)
+					.body(Response.error("404", "해당 보드를 찾을 수 없습니다."));
 		}
 	}
 
