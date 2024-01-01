@@ -26,6 +26,8 @@ public class MemberController {
 	@PostMapping("/inviteMember")
 	public ResponseEntity<String> inviteMember(@Valid @RequestBody ) {
 
+
+
 	}
 
 	// 멤버 생성

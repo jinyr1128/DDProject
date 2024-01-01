@@ -27,10 +27,8 @@ public class BoardService {
 
 	public BoardResponseDto createBoard(BoardRequestDto boardRequestDto, User user) {
 		Board board = boardRepository.save(new Board(boardRequestDto, user));
-
 		BoardMember createUserMember = new BoardMember(board, user, user.getUsername());
 		boardRepository.save(createUserMember);
-
 		return new BoardResponseDto(board);
 	}
 
