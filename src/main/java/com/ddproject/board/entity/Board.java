@@ -32,6 +32,7 @@ public class Board {
 	@ManyToOne
 	@JoinColumn(name = "created_by")
 	private User createdBy;
+
 	@PrePersist
 	protected void onCreate() {
 		this.createdAt = ZonedDateTime.now();

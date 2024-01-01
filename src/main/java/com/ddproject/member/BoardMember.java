@@ -7,7 +7,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.ZonedDateTime;
-import java.util.UUID;
 
 @Entity
 @Getter
@@ -30,7 +29,7 @@ public class BoardMember {
 
 	@Column
 	@Enumerated(EnumType.STRING)
-	private BoardMemberEnum role = BoardMemberEnum.MEMBER;
+	private BoardMemberEnum role;
 
 	@Enumerated(EnumType.STRING)
 	private BoardMemberStatus status = BoardMemberStatus.ACTIVE;
@@ -50,9 +49,14 @@ public class BoardMember {
 	}
 
 	public BoardMember(Board board, User user, String nickname) {
+		this(board, user, nickname, BoardMemberEnum.ADMIN);
+	}
+
+	public BoardMember(Board board, User user, String nickname, BoardMemberEnum role) {
 		this.user = user;
 		this.board = board;
 		this.nickname = nickname;
+		this.role = role;
 	}
 
 	public void updateNickname(String newNickname) {
@@ -75,6 +79,4 @@ public class BoardMember {
 	public void setBoard(Board board) {
 		this.board = board;
 	}
-
-
 }
