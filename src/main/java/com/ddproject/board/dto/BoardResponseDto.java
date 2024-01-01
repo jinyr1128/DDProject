@@ -16,7 +16,7 @@ public class BoardResponseDto {
 		this.boardTitle = board.getBoardTitle();
 		this.boardDescription = board.getBoardDescription();
 		this.createdAt = board.getCreatedAt();
-	} //1
+	}
 
 
 }

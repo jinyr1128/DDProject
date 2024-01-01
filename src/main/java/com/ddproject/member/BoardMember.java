@@ -16,9 +16,9 @@ import java.util.UUID;
 public class BoardMember {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name = "member_id", updatable = false, nullable = false)
-	private UUID id;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "member_id")
+	private Long id;
 
 	@ManyToOne
 	@JoinColumn(name = "board_id")

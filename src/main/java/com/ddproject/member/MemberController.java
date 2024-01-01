@@ -1,9 +1,11 @@
 package com.ddproject.member;
 
-import com.ddproject.board.entity.Board;
+import com.ddproject.common.security.UserDetailsImpl;
+import com.ddproject.global.response.Response;
 import com.ddproject.member.dto.MemberRequestDto;
-import com.ddproject.user.domain.User;
+import com.ddproject.member.dto.MemberResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -12,7 +14,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.nio.file.AccessDeniedException;
-import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -21,41 +22,39 @@ public class MemberController {
 
 	private final MemberService memberService;
 
-	//멤버 초대
-	@Operation(summary = "관리자로부터 멤버 초대")
-	@PostMapping("/inviteMember")
-	public ResponseEntity<String> inviteMember(@Valid @RequestBody ) {
-
-
-
-	}
-
-	// 멤버 생성
-	@Operation(summary = "멤버 생성")
-	@PostMapping("/createMember")
-	public ResponseEntity<String> createMember(@Valid @RequestBody MemberRequestDto memberRequestDto,
-											   User user, Board board) {
-
-
-		memberService.createMember(memberRequestDto, user, board);
-		return new ResponseEntity<>("해당 Board에 가입하여 Member 생성에 성공하였습니다.", HttpStatus.CREATED);
-	}
-
 	@Operation(summary = "멤버 닉네임 수정")
-	@PatchMapping("/memberNickname")
-	public ResponseEntity<String> updateMember(@Valid @RequestBody MemberRequestDto memberRequestDto,
-											   @AuthenticationPrincipal User user){
+	@PatchMapping("/nickName/{memberId}")
+	public ResponseEntity<Response<String>> updateMeber(@PathVariable Long memberId,
+														@Valid @RequestBody MemberRequestDto memberRequestDto,
+														@AuthenticationPrincipal UserDetailsImpl userDetails) {
 		try {
-			memberService.updateMember(memberRequestDto, user);
-			return ResponseEntity.ok("닉네임이 성공적으로 수정되었습니다.");
+			MemberResponseDto memberResponseDto = memberService.updateMember(memberRequestDto, memberId, userDetails.getUser());
+			return ResponseEntity.ok(Response.success("닉네임이 성공적으로 수정되었습니다. 새 닉네임: " + memberResponseDto.getNickname()));
 		} catch (AccessDeniedException e) {
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).body("수정 권한이 없습니다.");
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Response.error("401", "수정 권한이 없습니다."));
+		} catch (EntityNotFoundException e) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Response.error("404", "해당 멤버를 찾을 수 없습니다."));
+		} catch (IllegalArgumentException e) {
+			return ResponseEntity.badRequest().body(Response.error("400", e.getMessage()));
 		}
 	}
 
+	@GetMapping
+	@Operation(summary = "멤버 닉네임 조회")
+	public ResponseEntity<Response<String>> findMember(@PathVariable Long memberId){
+		MemberResponseDto memberResponseDto = memberService.findMember(memberId);
+		return ResponseEntity.ok(Response.success(memberResponseDto.getNickname()));
+	}
 
-
+	@Operation (summary = "멤버 탈퇴하기")
+	@DeleteMapping("/leave/{memberId}")
+	public ResponseEntity<Response<String>> leaveMember(@PathVariable Long boardId,
+														@PathVariable Long memberId) {
+		try {
+			memberService.leaveMember(memberId, boardId);
+			return ResponseEntity.ok(Response.success("성공적으로 탈퇴했습니다."));
+		} catch (Exception e) {
+			return ResponseEntity.badRequest().body(Response.error("400", e.getMessage()));
+		}
+	}
 }
-
-
-// " 이 버튼 하나만 더 만들어주세요 "
