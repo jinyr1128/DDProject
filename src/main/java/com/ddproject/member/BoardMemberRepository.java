@@ -21,4 +21,7 @@ public interface BoardMemberRepository extends JpaRepository<BoardMember, Long> 
 	@Query("SELECT COUNT(m) > 0 FROM BoardMember m WHERE m.nickname = :nickname AND m.id <> :id")
 	boolean existsByNicknameAndNotId(String nickname, Long id);
 
+	Optional<Object> findByBoard_IdAndUser_Id(Long boardId, Long id);
+
+	boolean existsByBoardIdAndUserIdAndRole(Long boardId, Long id, BoardMemberEnum boardMemberEnum);
 }

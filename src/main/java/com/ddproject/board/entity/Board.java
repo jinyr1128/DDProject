@@ -49,10 +49,10 @@ public class Board {
 		this.boardKey = UUID.randomUUID().toString();
 	}
 
-	public void update(BoardRequestDto boardRequestDto) {
-		this.boardTitle = boardRequestDto.getBoardTitle();
-		this.boardDescription = boardRequestDto.getBoardDescription();
-	}
+	 public void update(BoardRequestDto boardRequestDto) {
+		 this.boardTitle = boardRequestDto.getBoardTitle();
+		 this.boardDescription = boardRequestDto.getBoardDescription();
+	 }
 
 
 }
