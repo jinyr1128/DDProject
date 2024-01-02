@@ -1,6 +1,7 @@
 package com.ddproject.invite.dto;
 
 import com.ddproject.member.entity.BoardMemberEnum;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 @Data
@@ -9,9 +10,11 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class InviteDto {
-    private String sendUsername;
+    @NotBlank
     private String recvUsername;;
+    @NotBlank
     private Long boardId;
-    private BoardMemberEnum role;
+    @Builder.Default
+    private BoardMemberEnum role = BoardMemberEnum.MEMBER;
 
 }
