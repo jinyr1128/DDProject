@@ -2,6 +2,7 @@ package com.ddproject.invite.controller;
 
 import com.ddproject.global.response.Response;
 import com.ddproject.invite.dto.InviteDto;
+import com.ddproject.invite.service.InviteService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -18,14 +19,19 @@ public class InviteController {
 
     // TODO - implement : 경로값으로 받는 유저는 받는 유저이다.
 
+    private final InviteService inviteService;
+
     @Operation(summary = "멤버 초대")
-    @PostMapping("/invite/{username}")
-    public Response<Void> requestInvite(@PathVariable("username") String username, @AuthenticationPrincipal UserDetails userDetails) {
+    @PostMapping("/invite/{boardId}/{username}")
+    public Response<Void> requestInvite(@PathVariable Long boardId, @PathVariable String username,
+                                        @AuthenticationPrincipal UserDetails userDetails) {
         InviteDto inviteDTO = InviteDto.builder()
                 .sendUsername(userDetails.getUsername())
                 .recvUsername(username)
-                .boardKey("....")
+                .boardId(boardId) // boardKey 대신 boardId를 사용
                 .build();
+
+        inviteService.submitInvite(inviteDTO);
         return Response.success();
     }
 

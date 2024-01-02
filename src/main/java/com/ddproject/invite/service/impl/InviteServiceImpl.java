@@ -1,5 +1,7 @@
 package com.ddproject.invite.service.impl;
 
+import com.ddproject.board.entity.Board;
+import com.ddproject.board.repository.BoardRepository;
 import com.ddproject.global.exception.CustomException;
 import com.ddproject.global.exception.ErrorCode;
 import com.ddproject.invite.dto.InviteDto;
@@ -22,10 +24,11 @@ import java.util.List;
 public class InviteServiceImpl implements InviteService {
     private final InviteRepository inviteRepository;
     private final UserRepository userRepository;
+
     @Override
     public void submitInvite(InviteDto inviteDto) {
         Invite invite = Invite.builder()
-                .boardKey(inviteDto.getBoardKey())
+                .boardId(inviteDto.getBoardId())
                 .sendUsername(inviteDto.getSendUsername())
                 .recvUsername(inviteDto.getRecvUsername())
                 .build();
@@ -42,7 +45,6 @@ public class InviteServiceImpl implements InviteService {
         });
 
         List<Invite> list = inviteRepository.findAll();
-
 
         return null;
     }
