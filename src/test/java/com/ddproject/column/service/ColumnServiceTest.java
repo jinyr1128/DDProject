@@ -52,7 +52,7 @@ public class ColumnServiceTest {
         Long boardId = 1L; // boardKey 타입을 Long으로 변경
         Board mockBoard = mock(Board.class); // Board 모의 객체 생성
 
-        when(boardRepository.findById(boardId)).thenReturn(Optional.of(mock(Board.class))); // findBoardByboardKey 모의 처리
+//        when(boardRepository.findByIdAndIsDeletedFalse(boardId)).thenReturn(Optional.of(mock(Board.class))); // findBoardByboardKey 모의 처리
 
         ColumnDto columnDto = new ColumnDto(null, "Test Column", "Description", 1, boardId);
         Column mockColumn = new Column(); // 새로운 Column 객체 생성
@@ -61,6 +61,7 @@ public class ColumnServiceTest {
         mockColumn.setSequence(columnDto.getSequence());
         mockColumn.setBoard(mockBoard); // Board 설정
 
+        when(boardRepository.findByIdAndIsDeletedFalse(boardId)).thenReturn(Optional.of(mock(Board.class))); // findBoardByboardKey 모의 처리
         when(columnRepository.save(any())).thenReturn(mockColumn); // save 메소드에 대한 모의 반환값 설정
 
         // When
