@@ -1,7 +1,9 @@
 package com.ddproject.comment.controller;
 
-import com.ddproject.comment.dto.CommentDto;
+import com.ddproject.comment.dto.CommentRequest;
+import com.ddproject.comment.dto.CommentResponse;
 import com.ddproject.comment.service.CommentService;
+import com.ddproject.common.security.UserDetailsImpl;
 import com.ddproject.user.domain.User;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,32 +26,38 @@ public class CommentController {
 
     @Operation(summary = "댓글 작성")
     @PostMapping
-    public ResponseEntity<CommentDto> createComment(@PathVariable Long cardId,
-                                                    @RequestBody CommentDto commentDto) {
-        CommentDto createdComment = commentService.createComment(cardId, commentDto);
+    public ResponseEntity<CommentResponse> createComment(@PathVariable Long cardId,
+                                                         @RequestBody CommentRequest request,
+                                                         @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        User user = userDetails.getUser();
+        Long userId = user.getId();
+        CommentResponse createdComment = commentService.createComment(cardId, request, userId);
         return new ResponseEntity<>(createdComment, HttpStatus.CREATED);
     }
 
+
     @Operation(summary = "카드에 달린 댓글 전체 조회")
     @GetMapping
-    public ResponseEntity<List<CommentDto>> getCommentsByCardId(@PathVariable Long cardId) {
-        List<CommentDto> comments = commentService.getCommentsByCardId(cardId);
+    public ResponseEntity<List<CommentResponse>> getCommentsByCardId(@PathVariable Long cardId) {
+        List<CommentResponse> comments = commentService.getCommentsByCardId(cardId);
         return ResponseEntity.ok(comments);
     }
 
     @Operation(summary = "댓글 업데이트")
     @PatchMapping("/{commentId}")
-    public ResponseEntity<CommentDto> updateComment(@PathVariable Long commentId,
-                                                    @RequestBody CommentDto commentDto,
-                                                    @AuthenticationPrincipal User user) {
-        CommentDto updatedComment = commentService.updateComment(commentId, commentDto, user.getId());
+    public ResponseEntity<CommentResponse> updateComment(@PathVariable Long commentId,
+                                                         @RequestBody CommentRequest request,
+                                                         @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        User user = userDetails.getUser();
+        CommentResponse updatedComment = commentService.updateComment(commentId, request, user.getId());
         return ResponseEntity.ok(updatedComment);
     }
 
     @Operation(summary = "댓글 삭제")
     @DeleteMapping("/{commentId}")
     public ResponseEntity<Void> deleteComment(@PathVariable Long commentId,
-                                              @AuthenticationPrincipal User user) {
+                                              @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        User user = userDetails.getUser();
         commentService.deleteComment(commentId, user.getId());
         return ResponseEntity.ok().build();
     }
