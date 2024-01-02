@@ -2,7 +2,8 @@ package com.ddproject.card.service;
 
 import com.ddproject.board.repository.BoardRepository;
 import com.ddproject.board.entity.Board;
-import com.ddproject.card.dto.CardDto;
+import com.ddproject.card.dto.CardRequest;
+import com.ddproject.card.dto.CardResponse;
 import com.ddproject.card.entity.Card;
 import com.ddproject.card.entity.QCard;
 import com.ddproject.card.exception.CardErrorCode;
@@ -34,8 +35,8 @@ public class CardService {
     }
 
     @Transactional
-    public CardDto createCard(Long boardId, Long columnId, CardDto cardDto) {
-        Board board = boardRepository.findById(boardId)
+    public CardResponse createCard(Long boardId, Long columnId, CardRequest request) {
+        Board board = boardRepository.findByIdAndIsDeletedFalse(boardId)
                 .orElseThrow(() -> new CardException(CardErrorCode.BOARD_NOT_FOUND));
         Column column = columnRepository.findById(columnId)
                 .orElseThrow(() -> new CardException(CardErrorCode.COLUMN_NOT_FOUND));
@@ -43,21 +44,21 @@ public class CardService {
         // 카드 객체 생성 및 저장
         Card card = new Card();
         card.setColumn(column);
-        card.setName(cardDto.getName());
-        card.setDescription(cardDto.getDescription());
-        card.setColor(cardDto.getColor());
+        card.setName(request.getName());
+        card.setDescription(request.getDescription());
+        card.setColor(request.getColor());
 
-        // 기본 순서를 마지막으로 설정
+        // 기본 순서 설정
         int maxSequence = cardRepository.findMaxSequenceByColumnId(columnId);
         card.setSequence(maxSequence + 1);
 
         Card savedCard = cardRepository.save(card);
-
-        return convertEntityToDto(savedCard);
+        return convertEntityToResponse(savedCard);
     }
 
+
     @Transactional
-    public void updateCardSequence(Long cardId, int newSequence) {
+    public void updateCardSequence(Long cardId, Integer newSequence) {
         Card card = cardRepository.findById(cardId)
                 .orElseThrow(() -> new CardException(CardErrorCode.CARD_NOT_FOUND));
 
@@ -95,46 +96,36 @@ public class CardService {
         }
         // 만약 순서가 같지 않다면, 즉 순서가 바뀌지 않았다면 아무 것도 하지 x
     }
-
-    private CardDto convertEntityToDto(Card card) {
-        CardDto dto = new CardDto();
-        dto.setCardId(card.getId());
-        dto.setName(card.getName());
-        dto.setDescription(card.getDescription());
-        dto.setColor(card.getColor());
-        dto.setSequence(card.getSequence());
-        return dto;
-    }
-
-    public Card updateCard(Long cardId, CardDto cardDto) {
+    @Transactional
+    public CardResponse updateCard(Long cardId, CardRequest request) {
         return cardRepository.findById(cardId).map(card -> {
             boolean updated = false;
 
-            if (!Objects.equals(card.getName(), cardDto.getName())) {
-                card.setName(cardDto.getName());
+            if (!Objects.equals(card.getName(), request.getName())) {
+                card.setName(request.getName());
                 updated = true;
             }
-            if (!Objects.equals(card.getDescription(), cardDto.getDescription())) {
-                card.setDescription(cardDto.getDescription());
+            if (!Objects.equals(card.getDescription(), request.getDescription())) {
+                card.setDescription(request.getDescription());
                 updated = true;
             }
-            if (!Objects.equals(card.getColor(), cardDto.getColor())) {
-                card.setColor(cardDto.getColor());
+            if (!Objects.equals(card.getColor(), request.getColor())) {
+                card.setColor(request.getColor());
                 updated = true;
             }
-            if (!Objects.equals(card.getSequence(), cardDto.getSequence())) {
-                card.setSequence(cardDto.getSequence());
+            if (request.getSequence() != null && !Objects.equals(card.getSequence(), request.getSequence())) {
+                card.setSequence(request.getSequence());
                 updated = true;
             }
 
             if (updated) {
-                return cardRepository.save(card);
+                Card updatedCard = cardRepository.save(card);
+                return convertEntityToResponse(updatedCard);
             } else {
-                return null;
+                return convertEntityToResponse(card);
             }
         }).orElseThrow(() -> new CardException(CardErrorCode.CARD_NOT_FOUND));
     }
-
     @Transactional
     public boolean deleteCard(Long cardId) {
         if (!cardRepository.existsById(cardId)) {
@@ -154,6 +145,15 @@ public class CardService {
         card.setColumn(newColumn);
         card.setSequence(newSequence);
         cardRepository.save(card);
+    }
+    private CardResponse convertEntityToResponse(Card card) {
+        return new CardResponse(
+                card.getId(),
+                card.getName(),
+                card.getDescription(),
+                card.getColor(),
+                card.getSequence()
+        );
     }
 }
 //    @Transactional
