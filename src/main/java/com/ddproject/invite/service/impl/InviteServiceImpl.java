@@ -9,7 +9,7 @@ import com.ddproject.invite.dto.InviteResponseDto;
 import com.ddproject.invite.entity.Invite;
 import com.ddproject.invite.repository.InviteRepository;
 import com.ddproject.invite.service.InviteService;
-import com.ddproject.member.dto.MemberRequestDto;
+
 import com.ddproject.member.entity.BoardMember;
 import com.ddproject.member.entity.BoardMemberEnum;
 import com.ddproject.member.entity.BoardMemberStatus;
@@ -37,18 +37,18 @@ public class InviteServiceImpl implements InviteService {
     private final BoardMemberRepository boardMemberRepository;
 
     @Override
-    public void submitInvite(InviteDto inviteDto) {
+    public void submitInvite(InviteDto inviteDto, String username) {
         User invitedUser = userRepository.findByUsername(inviteDto.getRecvUsername()).orElseThrow();
-        User sendUser = userRepository.findByUsername(inviteDto.getSendUsername()).orElseThrow();
+        User sendUser = userRepository.findByUsername(username).orElseThrow();
 
         Long invitedUserId = invitedUser.getId();
         // 권한이 admin인지
-        if (boardMemberRepository.findByUserId(sendUser.getId()).orElseThrow().getRole() != BoardMemberEnum.ADMIN) {
-
+        if (boardMemberRepository.findByBoard_IdAndUser_Id(inviteDto.getBoardId(), sendUser.getId()).orElseThrow().getRole() != BoardMemberEnum.ADMIN) {
+            throw new CustomException(ErrorCode.USER_NOT_FOUND);
         }
 
-        if (!boardMemberRepository.existsByBoardIdAndUserId(inviteDto.getBoardId(), invitedUserId)) {
-
+        if (boardMemberRepository.existsByBoardIdAndUserId(inviteDto.getBoardId(), invitedUserId)) {
+            throw new CustomException(ErrorCode.USER_NOT_FOUND);
         }
         Board board = boardRepository.findById(inviteDto.getBoardId()).orElseThrow();
 
@@ -65,8 +65,9 @@ public class InviteServiceImpl implements InviteService {
         //초대 보내기
         Invite invite = Invite.builder()
                 .boardId(inviteDto.getBoardId())
-                .sendUsername(inviteDto.getSendUsername())
+                .sendUsername(username)
                 .recvUsername(inviteDto.getRecvUsername())
+                .role(inviteDto.getRole())
                 .build();
 
         inviteRepository.save(invite);
@@ -74,10 +75,6 @@ public class InviteServiceImpl implements InviteService {
 
     @Override
     public List<InviteResponseDto> readInvite(String username) {
-        //이미 컨트롤러단에 들어올 때 유저의 정보를 알아낼 수 있어서 필요 없을 것 같음.
-//        User user = userRepository.findByUsername(username).orElseThrow(() -> {
-//            throw new CustomException(ErrorCode.USER_NOT_FOUND);
-//        });
         List<Invite> list = inviteRepository.findAllByRecvUsername(username);
 
         return list.stream().map(item -> modelMapper.map(item, InviteResponseDto.class))
