@@ -52,7 +52,8 @@ public class CardController {
                                                 @AuthenticationPrincipal UserDetailsImpl userDetails) {
         User user = userDetails.getUser();
         if (!cardService.isUserAllowedToAccessCard(columnId, user.getId())) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access Denied");
+            throw new CardException(CardErrorCode.FORBIDDEN_CARD_ACCESS);
+//            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access Denied");
         }
         cardService.updateCardSequence(cardId, request.getSequence());
         return ResponseEntity.ok().build();
@@ -81,7 +82,7 @@ public class CardController {
                                       @AuthenticationPrincipal UserDetailsImpl userDetails) {
         User user = userDetails.getUser();
         if (!cardService.isUserAllowedToAccessCard(newColumnId, user.getId())) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access Denied");
+            throw new CardException(CardErrorCode.FORBIDDEN_CARD_ACCESS);
         }
         cardService.moveCardToAnotherColumn(cardId, newColumnId, newSequence);
         return ResponseEntity.ok().build();

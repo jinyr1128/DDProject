@@ -1,5 +1,8 @@
 package com.ddproject.global.advice;
 
+import com.ddproject.card.exception.CardException;
+import com.ddproject.column.exception.ColumnException;
+import com.ddproject.comment.exception.CommentException;
 import com.ddproject.global.exception.CustomException;
 import com.ddproject.global.response.Response;
 import lombok.extern.log4j.Log4j2;
@@ -17,12 +20,34 @@ import java.util.Map;
 @Log4j2
 public class CustomRestAdvice {
     @ExceptionHandler(CustomException.class)
-    public ResponseEntity<?> applicationHandler(CustomException e) {
+    public ResponseEntity<?> userExceptionHandler(CustomException e) {
         log.error("Error occurs {}", e.toString());
 
         return ResponseEntity.status(e.getErrorCode().getStatus())
                 .body(Response.error(e.getErrorCode().name(), e.getMsg()));
     }
+    @ExceptionHandler(CardException.class)
+    public ResponseEntity<?> cardExceptionHandler(CardException e) {
+        log.error("Error occurs {}", e.toString());
+
+        return ResponseEntity.status(e.getCardErrorCode().getStatus())
+                .body(Response.error(e.getCardErrorCode().name(), e.getMsg()));
+    }
+    @ExceptionHandler(ColumnException.class)
+    public ResponseEntity<?> columnExceptionHandler(ColumnException e) {
+        log.error("Error occurs {}", e.toString());
+
+        return ResponseEntity.status(e.getColumnErrorCode().getStatus())
+                .body(Response.error(e.getColumnErrorCode().name(), e.getMsg()));
+    }
+    @ExceptionHandler(CommentException.class)
+    public ResponseEntity<?> commentExceptionHandler(CommentException e) {
+        log.error("Error occurs {}", e.toString());
+
+        return ResponseEntity.status(e.getCommentErrorCode().getStatus())
+                .body(Response.error(e.getCommentErrorCode().name(), e.getMsg()));
+    }
+
     //컨트롤러 유효성 검증 예외처리 핸들러
     @ExceptionHandler(BindException.class)
     public ResponseEntity<?> handleBindException(BindException e) {

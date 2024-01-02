@@ -11,10 +11,11 @@ import com.ddproject.member.entity.BoardMemberEnum;
 import com.ddproject.member.repository.BoardMemberRepository;
 import com.ddproject.user.domain.User;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,6 +27,7 @@ public class BoardService {
 	private final BoardRepository boardRepository;
 	private final BoardMemberRepository boardMemberRepository;
 
+	@Transactional
 	public BoardResponseDto createBoard(BoardRequestDto boardRequestDto, User user) {
 		Board board = new Board(boardRequestDto, user);
 		board = boardRepository.save(board);
@@ -34,6 +36,7 @@ public class BoardService {
 		return new BoardResponseDto(board);
 	}
 
+	@Transactional(readOnly = true)
 	public BoardResponseDto getBoard(Long boardId, UserDetailsImpl userDetails) {
 		Board board = (Board) boardRepository.findByIdAndIsDeletedFalse(boardId)
 				.orElseThrow(() -> new IllegalArgumentException("해당 보드를 찾을 수 없습니다."));
@@ -76,6 +79,7 @@ public class BoardService {
 		board.delete();
 	}
 
+	@Transactional(readOnly = true)
 	public List<BoardResponseDto> getUserBoards(UserDetailsImpl userDetails) {
 		User user = userDetails.getUser();
 		List<Board> boards = boardRepository.findByCreatedByAndIsDeletedFalse(user);
