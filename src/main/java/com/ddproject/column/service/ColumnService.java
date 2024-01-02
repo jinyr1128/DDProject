@@ -5,13 +5,10 @@ import com.ddproject.column.entity.Column;
 import com.ddproject.column.exception.ColumnErrorCode;
 import com.ddproject.column.exception.ColumnException;
 import com.ddproject.column.repository.ColumnRepository;
-import com.ddproject.board.BoardRepository;
+import com.ddproject.board.repository.BoardRepository;
 import com.ddproject.board.entity.Board;
 import com.ddproject.column.repository.CustomColumnRepository;
-import com.ddproject.column.repository.CustomColumnRepositoryImpl;
-import com.ddproject.global.exception.CustomException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

@@ -1,6 +1,6 @@
 package com.ddproject.member.dto;
 
-import com.ddproject.member.BoardMemberEnum;
+import com.ddproject.member.entity.BoardMemberEnum;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

@@ -22,7 +22,7 @@ public class CardController {
         this.cardService = cardService;
     }
 
-    @Operation(summary = "칼드 생성")
+    @Operation(summary = "카드 생성")
     @PostMapping
     public ResponseEntity<?> createCard(@PathVariable Long boardId,
                                         @PathVariable Long columnId,
