@@ -2,6 +2,8 @@ package com.ddproject.column.service;
 
 import com.ddproject.board.entity.Board;
 import com.ddproject.board.repository.BoardRepository;
+import com.ddproject.column.dto.ColumnRequest;
+import com.ddproject.column.dto.ColumnResponse;
 import com.ddproject.column.entity.Column;
 import com.ddproject.column.repository.ColumnRepository;
 import lombok.extern.log4j.Log4j2;
@@ -40,36 +42,37 @@ public class ColumnServiceTest {
     public void setup() {
         MockitoAnnotations.initMocks(this);
     }
-
     @Test
     @DisplayName("새로운 컬럼 생성 테스트")
     public void createColumnTest() {
         // Given
-        Long boardId = 1L; // boardKey 타입을 Long으로 변경
+        Long boardId = 1L;
         Board mockBoard = mock(Board.class); // Board 모의 객체 생성
+        when(mockBoard.getId()).thenReturn(boardId); // getId()가 1을 반환하도록 설정
 
-//        when(boardRepository.findByIdAndIsDeletedFalse(boardId)).thenReturn(Optional.of(mock(Board.class))); // findBoardByboardKey 모의 처리
-
-        ColumnDto columnDto = new ColumnDto(null, "Test Column", "Description", 1, boardId);
+        ColumnRequest columnRequest = new ColumnRequest("columnName", "columnDescription", 1);
         Column mockColumn = new Column(); // 새로운 Column 객체 생성
-        mockColumn.setName(columnDto.getName());
-        mockColumn.setDescription(columnDto.getDescription());
-        mockColumn.setSequence(columnDto.getSequence());
+        mockColumn.setName(columnRequest.getName());
+        mockColumn.setDescription(columnRequest.getDescription());
+        mockColumn.setSequence(columnRequest.getSequence());
         mockColumn.setBoard(mockBoard); // Board 설정
 
-        when(boardRepository.findByIdAndIsDeletedFalse(boardId)).thenReturn(Optional.of(mock(Board.class))); // findBoardByboardKey 모의 처리
+        when(boardRepository.findByIdAndIsDeletedFalse(boardId)).thenReturn(Optional.of(mockBoard));
         when(columnRepository.save(any())).thenReturn(mockColumn); // save 메소드에 대한 모의 반환값 설정
 
         // When
-        ColumnDto result = columnService.createColumn(columnDto);
+        ColumnResponse result = columnService.createColumn(columnRequest, boardId); // 순서를 올바르게 수정
         log.info(result);
 
         // Then
         assertNotNull(result);
-        assertEquals(columnDto.getName(), result.getName());
-        assertEquals(columnDto.getDescription(), result.getDescription());
-        assertEquals(columnDto.getSequence(), result.getSequence());
+        assertEquals(columnRequest.getName(), result.getName());
+        assertEquals(columnRequest.getDescription(), result.getDescription());
+        assertEquals(columnRequest.getSequence(), result.getSequence());
+        assertEquals(boardId, result.getBoardId());
     }
+
+
 //    @Test
 //    @DisplayName("컬럼 이름 업데이트 테스트")
 //    public void updateColumnNameTest() {
