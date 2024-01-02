@@ -11,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.validation.BindException;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,20 +26,17 @@ public class InviteController {
 
     @Operation(summary = "멤버 초대")
     @PostMapping
-    public ResponseEntity<Response<Void>> requestInvite(@RequestBody @Valid InviteDto inviteDto, @PathVariable String username,
-                                        @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        log.info(userDetails);
-        InviteDto inviteDTO = InviteDto.builder()
-                .sendUsername(userDetails.getUsername())
-                .recvUsername(username)
-                .boardId(inviteDto.getBoardId()) // boardKey 대신 boardId를 사용
-                .build();
+    public ResponseEntity<Response<Void>> requestInvite(@RequestBody @Valid InviteDto inviteDto,
+                                                        @AuthenticationPrincipal UserDetailsImpl userDetails, BindingResult bindingResult)throws BindException {
+        if (bindingResult.hasErrors()) {
+            throw new BindException(bindingResult);
+        }
 
-        inviteService.submitInvite(inviteDTO);
+        inviteService.submitInvite(inviteDto, userDetails.getUsername());
         return ResponseEntity.ok(Response.success());
     }
 
-    @Operation
+    @Operation(summary = "유저 자신의 초대 목록 조회")
     @GetMapping
     public ResponseEntity<Response<List<InviteResponseDto>>> readInvite(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         return ResponseEntity.ok(Response.success(inviteService.readInvite(userDetails.getUsername())));
