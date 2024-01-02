@@ -1,6 +1,5 @@
 package com.ddproject.column.exception;
 
-import com.ddproject.global.exception.ErrorCode;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 @AllArgsConstructor
