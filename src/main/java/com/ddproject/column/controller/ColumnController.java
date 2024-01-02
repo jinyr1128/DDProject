@@ -1,6 +1,6 @@
 package com.ddproject.column.controller;
 
-import com.ddproject.column.dto.ColumnCreateRequest;
+import com.ddproject.column.dto.ColumnRequest;
 import com.ddproject.column.dto.ColumnResponse;
 import com.ddproject.column.service.ColumnService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -23,7 +23,7 @@ public class ColumnController {
 
     @Operation(summary = "칼럼 생성")
     @PostMapping("/{boardId}/columns")
-    public ResponseEntity<ColumnResponse> createColumn(@PathVariable Long boardId, @RequestBody ColumnCreateRequest request) {
+    public ResponseEntity<ColumnResponse> createColumn(@PathVariable Long boardId, @RequestBody ColumnRequest request) {
         ColumnResponse createdColumn = columnService.createColumn(request, boardId);
         return new ResponseEntity<>(createdColumn, HttpStatus.CREATED);
     }

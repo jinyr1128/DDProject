@@ -1,6 +1,6 @@
 package com.ddproject.column.service;
 
-import com.ddproject.column.dto.ColumnCreateRequest;
+import com.ddproject.column.dto.ColumnRequest;
 import com.ddproject.column.dto.ColumnResponse;
 import com.ddproject.column.entity.Column;
 import com.ddproject.column.exception.ColumnErrorCode;
@@ -23,7 +23,7 @@ public class ColumnService {
     private final CustomColumnRepository customColumnRepository;
 
 
-    public ColumnResponse createColumn(ColumnCreateRequest request, Long boardId) {
+    public ColumnResponse createColumn(ColumnRequest request, Long boardId) {
         Column column = new Column();
         column.setName(request.getName());
         column.setDescription(request.getDescription());
