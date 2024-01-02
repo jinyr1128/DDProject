@@ -2,7 +2,6 @@ package com.ddproject.column.service;
 
 import com.ddproject.board.entity.Board;
 import com.ddproject.board.repository.BoardRepository;
-import com.ddproject.column.dto.ColumnDto;
 import com.ddproject.column.entity.Column;
 import com.ddproject.column.repository.ColumnRepository;
 import lombok.extern.log4j.Log4j2;
@@ -17,13 +16,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
