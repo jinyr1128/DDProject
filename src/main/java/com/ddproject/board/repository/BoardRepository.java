@@ -1,4 +1,4 @@
-package com.ddproject.board;
+package com.ddproject.board.repository;
 
 import com.ddproject.board.entity.Board;
 import com.ddproject.user.domain.User;

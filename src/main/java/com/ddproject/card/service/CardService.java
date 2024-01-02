@@ -1,21 +1,18 @@
 package com.ddproject.card.service;
 
-import com.ddproject.board.BoardRepository;
+import com.ddproject.board.repository.BoardRepository;
 import com.ddproject.board.entity.Board;
 import com.ddproject.card.dto.CardDto;
 import com.ddproject.card.entity.Card;
 import com.ddproject.card.entity.QCard;
 import com.ddproject.card.exception.CardErrorCode;
 import com.ddproject.card.exception.CardException;
-import com.ddproject.member.BoardMemberRepository;
+import com.ddproject.member.repository.BoardMemberRepository;
 import com.ddproject.card.repository.CardRepository;
 import com.ddproject.column.entity.Column;
 import com.ddproject.column.repository.ColumnRepository;
-import com.ddproject.member.BoardMemberRepository;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

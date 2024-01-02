@@ -1,14 +1,14 @@
-package com.ddproject.board;
+package com.ddproject.board.service;
 
+import com.ddproject.board.repository.BoardRepository;
 import com.ddproject.board.dto.BoardRequestDto;
 import com.ddproject.board.dto.BoardResponseDto;
 import com.ddproject.board.entity.Board;
 import com.ddproject.common.security.UserDetailsImpl;
-import com.ddproject.member.BoardMember;
 
-import com.ddproject.member.BoardMemberEnum;
-import com.ddproject.member.BoardMemberRepository;
-import com.ddproject.member.MemberService;
+import com.ddproject.member.entity.BoardMember;
+import com.ddproject.member.entity.BoardMemberEnum;
+import com.ddproject.member.repository.BoardMemberRepository;
 import com.ddproject.user.domain.User;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
@@ -17,7 +17,6 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service

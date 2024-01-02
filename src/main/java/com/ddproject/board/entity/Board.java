@@ -1,17 +1,16 @@
 package com.ddproject.board.entity;
 
 import com.ddproject.board.dto.BoardRequestDto;
-import com.ddproject.member.BoardMember;
+import com.ddproject.member.entity.BoardMember;
 import com.ddproject.user.domain.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-
 import java.time.ZonedDateTime;
 import java.util.Set;
 import java.util.UUID;
- //1
+
 @Entity
 @Getter
 @NoArgsConstructor

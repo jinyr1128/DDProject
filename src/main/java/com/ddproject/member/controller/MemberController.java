@@ -1,7 +1,8 @@
-package com.ddproject.member;
+package com.ddproject.member.controller;
 
 import com.ddproject.common.security.UserDetailsImpl;
 import com.ddproject.global.response.Response;
+import com.ddproject.member.service.MemberService;
 import com.ddproject.member.dto.MemberRequestDto;
 import com.ddproject.member.dto.MemberResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
