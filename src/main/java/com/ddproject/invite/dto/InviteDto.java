@@ -14,5 +14,4 @@ public class InviteDto {
     private String recvUsername;;
     private String boardKey;
 
-
 }
