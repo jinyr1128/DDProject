@@ -80,7 +80,7 @@ public class UserServiceImpl implements UserService {
             throw new CustomException(ErrorCode.INVALID_PASSWORD, "비밀번호를 확인해주세요");
         }
 
-        if (!passwordDto.getCurrentPw().equals(passwordDto.getChangePw())) {
+        if (passwordDto.getCurrentPw().equals(passwordDto.getChangePw())) {
             throw new CustomException(ErrorCode.INVALID_PASSWORD, "현재 패스워드와 같습니다.");
         }
 

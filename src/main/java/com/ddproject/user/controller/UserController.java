@@ -2,6 +2,7 @@ package com.ddproject.user.controller;
 
 import com.ddproject.alarm.dto.AlarmDto;
 import com.ddproject.alarm.service.AlarmService;
+import com.ddproject.common.security.UserDetailsImpl;
 import com.ddproject.global.response.Response;
 import com.ddproject.user.dto.CheckRequestDto;
 import com.ddproject.user.dto.PasswordDto;
@@ -18,6 +19,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.BindException;
@@ -36,27 +38,27 @@ public class UserController {
 
     @Operation(summary = "일반 회원가입 API", description = "일반 회원가입")
     @PostMapping("/signup")
-    public Response<SignupResponseDto> signup(@Valid @RequestBody SignupUserDto signupUserDto, BindingResult bindingResult) throws BindException {
+    public ResponseEntity<Response<SignupResponseDto>> signup(@Valid @RequestBody SignupUserDto signupUserDto, BindingResult bindingResult) throws BindException {
         if (bindingResult.hasErrors()) {
             throw new BindException(bindingResult);
         }
 
         SignupResponseDto dto = userService.signup(signupUserDto);
 
-        return Response.success(dto);
+        return ResponseEntity.ok(Response.success(dto));
     }
 
     @Operation(summary = "유효성 검증 API", description = "유효성 검증 API")
     @GetMapping(value = "/check")
-    public Response<Boolean> validateEmail(CheckRequestDto checkRequestDto) {
+    public ResponseEntity<Response<Boolean>> validateEmail(CheckRequestDto checkRequestDto) {
         boolean result = userService.validateSignup(checkRequestDto);
 
-        return Response.success(result);
+        return ResponseEntity.ok(Response.success(result));
     }
 
     @Operation(summary = "패스워드 변경 API", description = "패스워드 변경 API")
-    @PutMapping(value = "/password", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public Response<Void> changePw(@Valid @RequestBody PasswordDto passwordDto, BindingResult bindingResult, @AuthenticationPrincipal UserDetails userDetails) throws BindException {
+    @PutMapping(value = "/password")
+    public ResponseEntity<Response<Void>> changePw(@Valid @RequestBody PasswordDto passwordDto, BindingResult bindingResult, @AuthenticationPrincipal UserDetailsImpl userDetails) throws BindException {
         if (bindingResult.hasErrors()) {
             throw new BindException(bindingResult);
         }
@@ -64,14 +66,14 @@ public class UserController {
         log.info(userDetails);
         userService.changePw(passwordDto, userDetails.getUsername());
 
-        return Response.success();
+        return ResponseEntity.ok(Response.success());
     }
 
     @Operation(summary = "알람 API", description = "알람 API")
     @GetMapping("/alarm")
-    public Response<Page<AlarmDto>> alarm(Pageable pageable, @AuthenticationPrincipal UserDetails userDetails) {
+    public ResponseEntity<Response<Page<AlarmDto>>> alarm(Pageable pageable, @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
-        return Response.success(userService.alarmList(userDetails.getUsername(), pageable));
+        return ResponseEntity.ok(Response.success(userService.alarmList(userDetails.getUsername(), pageable)));
     }
 
     @GetMapping("/alarm/subscribe")
