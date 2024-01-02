@@ -26,7 +26,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@Transactional
 @RequiredArgsConstructor
 @Log4j2
 public class InviteServiceImpl implements InviteService {
@@ -37,6 +36,7 @@ public class InviteServiceImpl implements InviteService {
     private final BoardMemberRepository boardMemberRepository;
 
     @Override
+    @Transactional
     public void submitInvite(InviteDto inviteDto, String username) {
         User invitedUser = userRepository.findByUsername(inviteDto.getRecvUsername()).orElseThrow();
         User sendUser = userRepository.findByUsername(username).orElseThrow();
@@ -74,6 +74,7 @@ public class InviteServiceImpl implements InviteService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<InviteResponseDto> readInvite(String username) {
         List<Invite> list = inviteRepository.findAllByRecvUsername(username);
 
