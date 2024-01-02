@@ -3,6 +3,8 @@ package com.ddproject.member.entity;
 import com.ddproject.board.entity.Board;
 import com.ddproject.user.domain.User;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -11,6 +13,8 @@ import java.time.ZonedDateTime;
 @Entity
 @Getter
 @NoArgsConstructor
+@Builder
+@AllArgsConstructor
 @Table(name = "Board_Invited_Users")
 public class BoardMember {
 
