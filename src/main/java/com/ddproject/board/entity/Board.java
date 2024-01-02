@@ -26,18 +26,16 @@ public class Board {
 	private String boardDescription;
 	private String coverImageColor;
 	private ZonedDateTime createdAt;
-	private Long createdBy;
 //	private boolean isDeleted;
+
+
+	@ManyToOne
+	@JoinColumn(name = "created_by")
+	private User createdBy;
 
 	@PrePersist
 	protected void onCreate() {
-		createdAt = ZonedDateTime.now();
-		if (boardKey == null) {
-			boardKey = UUID.randomUUID().toString();
-		}
-		if (coverImageColor == null) {
-			coverImageColor = "white";
-		}
+		this.createdAt = ZonedDateTime.now();
 	}
 
 	@OneToMany(mappedBy = "board")
@@ -46,13 +44,15 @@ public class Board {
 	public Board(BoardRequestDto boardRequestDto, User user) {
 		this.boardTitle = boardRequestDto.getBoardTitle();
 		this.boardDescription = boardRequestDto.getBoardDescription();
-		this.createdBy = user.getId();
+		this.createdBy = user;
+		this.coverImageColor = "white";
+		this.boardKey = UUID.randomUUID().toString();
 	}
 
-	public void update(BoardRequestDto boardRequestDto) {
-		this.boardTitle = boardRequestDto.getBoardTitle();
-		this.boardDescription = boardRequestDto.getBoardDescription();
-	}
+	 public void update(BoardRequestDto boardRequestDto) {
+		 this.boardTitle = boardRequestDto.getBoardTitle();
+		 this.boardDescription = boardRequestDto.getBoardDescription();
+	 }
 
 
 }

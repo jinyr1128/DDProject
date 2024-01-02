@@ -1,24 +1,27 @@
 package com.ddproject.member;
 
 import com.ddproject.board.entity.Board;
-import com.ddproject.member.BoardMember;
-import com.ddproject.user.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
-import java.util.List;
 import java.util.Optional;
 
 public interface BoardMemberRepository extends JpaRepository<BoardMember, Long> {
 
-	Optional<BoardMember> findByNickname(String nickname);
 
 	Optional<BoardMember> findByUserId(Long userId);
 
-	Optional<BoardMember> findByBoardAndUser(Board board, User user);
+	Optional<BoardMember> findMemberById(Long memberId);
+
 
 	Optional<BoardMember> findByBoard_Id(Long boardId);
 
 	boolean existsByBoardIdAndUserId(Long boardId, Long userId);
 
+	@Query("SELECT COUNT(m) > 0 FROM BoardMember m WHERE m.nickname = :nickname AND m.id <> :id")
+	boolean existsByNicknameAndNotId(String nickname, Long id);
 
+	Optional<Object> findByBoard_IdAndUser_Id(Long boardId, Long id);
+
+	boolean existsByBoardIdAndUserIdAndRole(Long boardId, Long id, BoardMemberEnum boardMemberEnum);
 }

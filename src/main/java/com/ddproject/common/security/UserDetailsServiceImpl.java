@@ -22,12 +22,19 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) {
+//        User user = userRepository.findByUsername(username).orElseThrow(() -> {
+//            throw new CustomException(ErrorCode.USER_NOT_FOUND, String.format("{} not founded", username));
+//        });
+//
+//        UserDto userDto = new UserDto(user.getUsername(), user.getPassword(), List.of(new SimpleGrantedAuthority("ROLE_USER")));
+//
+//        return userDto;
+
         User user = userRepository.findByUsername(username).orElseThrow(() -> {
-            throw new CustomException(ErrorCode.USER_NOT_FOUND, String.format("{} not founded", username));
+            throw new CustomException(ErrorCode.USER_NOT_FOUND, String.format("%s not founded", username));
         });
 
-        UserDto userDto = new UserDto(user.getUsername(), user.getPassword(), List.of(new SimpleGrantedAuthority("ROLE_USER")));
-
-        return userDto;
+        // UserDetailsImpl 객체를 반환하도록 변경
+        return new UserDetailsImpl(user);
     }
 }

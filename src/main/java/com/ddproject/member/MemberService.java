@@ -3,13 +3,14 @@ package com.ddproject.member;
 import com.ddproject.board.BoardRepository;
 import com.ddproject.board.entity.Board;
 import com.ddproject.member.dto.MemberRequestDto;
+import com.ddproject.member.dto.MemberResponseDto;
 import com.ddproject.user.domain.User;
 import com.ddproject.user.repository.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.nio.file.AccessDeniedException;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -19,40 +20,51 @@ public class MemberService {
 	private UserRepository userRepository;
 	private BoardRepository boardRepository;
 
-	public void createMember(MemberRequestDto memberRequestDto, User user, Board board) {
+	public MemberResponseDto findMember(Long memberId) {
+		return toResponseDto(boardMemberRepository
+				.findMemberById(memberId)
+				.orElseThrow(() -> new EntityNotFoundException("해당 멤버를 찾을 수 없습니다.")));
+	}
 
-		Optional<BoardMember> existingMember = boardMemberRepository.findByBoardAndUser(board, user);
-		if (existingMember.isPresent()) {
-			throw new IllegalArgumentException("이미 가입한 사용자입니다.");
-		} // isDelete 상태에 따른 재가입이 불가능할 수 있는 부분 예외처리 해야함.
+	public static MemberResponseDto toResponseDto(BoardMember boardMember) {
+		return MemberResponseDto.builder()
+				.nickname(boardMember.getNickname())
+				.role(boardMember.getRole())
+				.build();
+	}
 
-		String nickName = memberRequestDto.getMemberName();
-		Optional<BoardMember> findMember = boardMemberRepository.findByNickname(nickName);
-		if (findMember.isPresent()) {
+	public MemberResponseDto updateMember(MemberRequestDto memberRequestDto, Long memberId, User user) throws AccessDeniedException {
+
+		BoardMember boardMember = boardMemberRepository.findMemberById(memberId)
+						.orElseThrow(() -> new EntityNotFoundException("해당 멤버를 찾을 수 없습니다."));
+
+		if(!boardMember.getUser().getId().equals(user.getId())) {
+			throw new AccessDeniedException("닉네임 수정 권한이 없습니다.");
+		}
+
+		if(boardMemberRepository.existsByNicknameAndNotId(memberRequestDto.getMemberName(), boardMember.getId())) {
 			throw new IllegalArgumentException("중복된 닉네임 입니다.");
 		}
 
-		BoardMember newMember = new BoardMember(board, user, nickName);
-		boardMemberRepository.save(newMember);
-	}
-
-	public void updateMember(MemberRequestDto memberRequestDto, User user) throws AccessDeniedException {
-
-		Optional<BoardMember> findMember = boardMemberRepository.findByUserId(user.getId());
-		if (!findMember.isPresent()) {
-			throw new IllegalArgumentException("해당 사용자의 멤버 정보가 없습니다.");
-		}
-
-		BoardMember boardMember = findMember.get();
-		if (boardMember.getRole() != BoardMemberEnum.ADMIN) {
-			throw new AccessDeniedException("수정 권한이 없습니다. 관리자만 수정 가능합니다.");
-		}
-
-		String newNickname = memberRequestDto.getMemberName();
-		boardMember.updateNickname(newNickname);
+		boardMember.updateNickname(memberRequestDto.getMemberName());
 		boardMemberRepository.save(boardMember);
+
+		return toResponseDto(boardMember);
 	}
 
-//	public  findProfile()
+	public void leaveMember(Long memberId, Long boardId) throws AccessDeniedException {
+		Board board = boardRepository.findById(boardId)
+				.orElseThrow(() -> new EntityNotFoundException("해당 보드를 찾을 수 없습니다."));
+		BoardMember member = boardMemberRepository.findById(memberId)
+				.orElseThrow(() -> new EntityNotFoundException("해당 멤버를 찾을 수 없습니다."));
+
+		if (!member.getBoard().equals(board)) {
+			throw new EntityNotFoundException("보드에 없는 멤버입니다.");
+		}
+
+		member.updateStatus(BoardMemberStatus.DELETED);
+		boardMemberRepository.save(member);
+	}
+
 
 }
