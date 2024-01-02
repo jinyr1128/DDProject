@@ -27,7 +27,7 @@ public class ColumnService {
         column.setDescription(columnDto.getDescription());
         column.setSequence(columnDto.getSequence());
 
-        Board board = boardRepository.findById(columnDto.getBoardId())
+        Board board = boardRepository.findByIdAndIsDeletedFalse(columnDto.getBoardId())
                 .orElseThrow(() -> new ColumnException(ColumnErrorCode.BOARD_NOT_FOUND));
         column.setBoard(board);
 
