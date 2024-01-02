@@ -57,4 +57,5 @@ public class MemberController {
 			return ResponseEntity.badRequest().body(Response.error("400", e.getMessage()));
 		}
 	}
+
 }

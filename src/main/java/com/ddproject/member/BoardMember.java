@@ -79,4 +79,5 @@ public class BoardMember {
 	public void setBoard(Board board) {
 		this.board = board;
 	}
+
 }

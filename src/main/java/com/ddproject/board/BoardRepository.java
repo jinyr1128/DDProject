@@ -13,11 +13,7 @@ import java.util.Optional;
 @Repository
 public interface BoardRepository extends JpaRepository<Board, Long> {
 
-	@Query("SELECT b FROM Board b JOIN b.invitedUsers m WHERE m.user.id = :userId")
-	List<Board> findByUserId(@Param("userId") User userId);
+	Optional<Board> findByIdAndIsDeletedFalse(Long boardId);
 
-	@Query("SELECT b FROM Board b JOIN b.invitedUsers m WHERE m.user.id = :userId")
-	List<Board> findBoardsByUserId(@Param("userId") Long userId);
-
-
+	List<Board> findByCreatedByAndIsDeletedFalse(User createdBy);
 }

@@ -26,8 +26,8 @@ public class Board {
 	private String boardDescription;
 	private String coverImageColor;
 	private ZonedDateTime createdAt;
-//	private boolean isDeleted;
 
+	 private boolean isDeleted = false;
 
 	@ManyToOne
 	@JoinColumn(name = "created_by")
@@ -54,5 +54,8 @@ public class Board {
 		 this.boardDescription = boardRequestDto.getBoardDescription();
 	 }
 
+	 public void delete() {
+		 this.isDeleted = true;
+	 }
 
 }

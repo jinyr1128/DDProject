@@ -2,6 +2,7 @@ package com.ddproject.invite.controller;
 
 import com.ddproject.global.response.Response;
 import com.ddproject.invite.dto.InviteDto;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -17,6 +18,7 @@ public class InviteController {
 
     // TODO - implement : 경로값으로 받는 유저는 받는 유저이다.
 
+    @Operation(summary = "멤버 초대")
     @PostMapping("/invite/{username}")
     public Response<Void> requestInvite(@PathVariable("username") String username, @AuthenticationPrincipal UserDetails userDetails) {
         InviteDto inviteDTO = InviteDto.builder()

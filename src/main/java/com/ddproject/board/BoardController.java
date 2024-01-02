@@ -25,18 +25,18 @@ public class BoardController {
 
 	@Operation(summary = "보드 생성")
 	@PostMapping
-	public ResponseEntity<BoardResponseDto> createBoard(@Valid @RequestBody BoardRequestDto boardRequestDto,
-														@AuthenticationPrincipal UserDetailsImpl userDetails) {
+	public ResponseEntity<Response<BoardResponseDto>> createBoard(@Valid @RequestBody BoardRequestDto boardRequestDto,
+																  @AuthenticationPrincipal UserDetailsImpl userDetails) {
 		BoardResponseDto responseDto = boardService.createBoard(boardRequestDto, userDetails.getUser());
-		return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
+		return ResponseEntity.status(HttpStatus.CREATED).body(Response.success(responseDto));
 	}
 
 	@Operation(summary = "보드 조회")
 	@GetMapping("/{boardId}")
-	public ResponseEntity<BoardResponseDto> getBoard(@PathVariable Long boardId,
-													 @AuthenticationPrincipal UserDetailsImpl userDetails) {
+	public ResponseEntity<Response<BoardResponseDto>> getBoard(@PathVariable Long boardId,
+															   @AuthenticationPrincipal UserDetailsImpl userDetails) {
 		BoardResponseDto responseDto = boardService.getBoard(boardId, userDetails);
-		return ResponseEntity.ok(responseDto);
+		return ResponseEntity.ok(Response.success(responseDto));
 	}
 
 	@Operation(summary = "보드 업데이트")
@@ -64,9 +64,11 @@ public class BoardController {
 			boardService.deleteBoard(boardId, userDetails);
 			return ResponseEntity.ok(Response.success("보드가 성공적으로 삭제되었습니다."));
 		} catch (AccessDeniedException e) {
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Response.error("401", "삭제 권한이 없습니다."));
+			return ResponseEntity.status(HttpStatus.FORBIDDEN)
+					.body(Response.error("403", "삭제 권한이 없습니다."));
 		} catch (EntityNotFoundException e) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Response.error("404", "해당 보드를 찾을 수 없습니다."));
+			return ResponseEntity.status(HttpStatus.NOT_FOUND)
+					.body(Response.error("404", "해당 보드를 찾을 수 없습니다."));
 		}
 	}
 
@@ -76,24 +78,5 @@ public class BoardController {
 		List<BoardResponseDto> boards = boardService.getUserBoards(userDetails);
 		return ResponseEntity.ok(boards);
 	}
-
-
-//
-//	@Operation(summary = "보드 삭제")
-//	@DeleteMapping("/{boardid}")
-//	public ResponseEntity<Void> deleteBoard(@PathVariable Long id,
-//											@AuthenticationPrincipal User user) {
-//		boardService.deleteBoard(id, user);
-//		return ResponseEntity.ok().build();
-//	}
-//
-//	@Operation(summary = "사용자의 모든 보드 조회")
-//	@GetMapping
-//	public ResponseEntity<List<BoardResponseDto>> getUserBoards(@AuthenticationPrincipal User user) {
-//		List<BoardResponseDto> boards = boardService.getUserBoards(user);
-//		return ResponseEntity.ok(boards);
-//	}
-
-
 
 }

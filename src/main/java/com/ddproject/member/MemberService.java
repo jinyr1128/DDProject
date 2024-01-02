@@ -66,5 +66,4 @@ public class MemberService {
 		boardMemberRepository.save(member);
 	}
 
-
 }
