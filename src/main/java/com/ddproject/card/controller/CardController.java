@@ -3,6 +3,7 @@ package com.ddproject.card.controller;
 import com.ddproject.card.dto.CardDto;
 import com.ddproject.card.entity.Card;
 import com.ddproject.card.service.CardService;
+import com.ddproject.common.security.UserDetailsImpl;
 import com.ddproject.user.domain.User;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +28,8 @@ public class CardController {
     public ResponseEntity<?> createCard(@PathVariable Long boardId,
                                         @PathVariable Long columnId,
                                         @RequestBody CardDto cardDto,
-                                        @AuthenticationPrincipal User user) {
+                                        @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        User user = userDetails.getUser();
         if (!cardService.isUserAllowedToAccessCard(boardId, user.getId())) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access Denied");
         }
@@ -40,7 +42,8 @@ public class CardController {
     public ResponseEntity<?> updateCardSequence(@PathVariable Long columnId,
                                                 @PathVariable Long cardId,
                                                 @RequestBody CardDto cardDto,
-                                                @AuthenticationPrincipal User user) {
+                                                @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        User user = userDetails.getUser();
         if (!cardService.isUserAllowedToAccessCard(columnId, user.getId())) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access Denied");
         }
@@ -68,7 +71,8 @@ public class CardController {
     public ResponseEntity<?> moveCard(@PathVariable Long cardId,
                                       @RequestParam Long newColumnId,
                                       @RequestParam int newSequence,
-                                      @AuthenticationPrincipal User user) {
+                                      @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        User user = userDetails.getUser();
         if (!cardService.isUserAllowedToAccessCard(newColumnId, user.getId())) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access Denied");
         }
