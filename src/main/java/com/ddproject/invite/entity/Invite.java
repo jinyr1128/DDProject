@@ -1,9 +1,8 @@
 package com.ddproject.invite.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.ddproject.member.entity.BoardMember;
+import com.ddproject.member.entity.BoardMemberEnum;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -22,5 +21,8 @@ public class Invite {
     private Long boardId;
     private String sendUsername;
     private String recvUsername;
+    @Enumerated(value = EnumType.STRING)
+    private BoardMemberEnum role;
+
 
 }
