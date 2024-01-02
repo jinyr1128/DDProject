@@ -1,9 +1,12 @@
-package com.ddproject.member;
+package com.ddproject.member.service;
 
-import com.ddproject.board.BoardRepository;
+import com.ddproject.board.repository.BoardRepository;
 import com.ddproject.board.entity.Board;
+import com.ddproject.member.entity.BoardMember;
 import com.ddproject.member.dto.MemberRequestDto;
 import com.ddproject.member.dto.MemberResponseDto;
+import com.ddproject.member.entity.BoardMemberStatus;
+import com.ddproject.member.repository.BoardMemberRepository;
 import com.ddproject.user.domain.User;
 import com.ddproject.user.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;

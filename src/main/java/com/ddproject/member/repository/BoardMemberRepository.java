@@ -1,6 +1,7 @@
-package com.ddproject.member;
+package com.ddproject.member.repository;
 
-import com.ddproject.board.entity.Board;
+import com.ddproject.member.entity.BoardMember;
+import com.ddproject.member.entity.BoardMemberEnum;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

@@ -1,5 +1,6 @@
-package com.ddproject.board;
+package com.ddproject.board.controller;
 
+import com.ddproject.board.service.BoardService;
 import com.ddproject.board.dto.BoardRequestDto;
 import com.ddproject.board.dto.BoardResponseDto;
 import com.ddproject.common.security.UserDetailsImpl;
