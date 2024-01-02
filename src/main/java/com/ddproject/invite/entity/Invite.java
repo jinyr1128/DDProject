@@ -19,7 +19,7 @@ public class Invite {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String boardKey;
+    private Long boardId;
     private String sendUsername;
     private String recvUsername;
 

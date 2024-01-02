@@ -1,17 +1,15 @@
 package com.ddproject.invite.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Data
 @Builder
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 public class InviteDto {
     private String sendUsername;
     private String recvUsername;;
-    private String boardKey;
+    private Long boardId;
 
 }
