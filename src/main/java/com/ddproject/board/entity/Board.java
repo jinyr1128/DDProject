@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 import java.time.ZonedDateTime;
 import java.util.Set;
 import java.util.UUID;
-
 @Entity
 @Getter
 @NoArgsConstructor
