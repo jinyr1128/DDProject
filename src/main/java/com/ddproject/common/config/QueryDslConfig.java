@@ -1,4 +1,4 @@
-package com.ddproject.column.config;
+package com.ddproject.common.config;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
