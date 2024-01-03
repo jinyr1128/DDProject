@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>태스크 관리 보드</title>
+    <link rel="stylesheet" href="../static/css/board.css">
+</head>
+<body class="gradient-custom">
+<nav class="navbar">
+    <div class="navbar-left">
+        <!-- 로고 -->
+        <div class="navbar-logo">
+            <img src="../static/images/로고8.jpeg" alt="웹페이지 로고">
+        </div>
+
+        <!-- 보드 이름 (수정 가능) -->
+        <div class="navbar-board-name" contenteditable="true">
+            보드의 이름
+        </div>
+    </div>
+    <!-- 유저 프로필 -->
+    <div class="navbar-user-profile">
+        <img src="../static/images/IMG_1851.JPG" alt="유저 프로필">
+    </div>
+</nav>
+
+<div class="board">
+    <!-- 칼럼 1 시작 -->
+    <div class="column" draggable="true">
+        <div class="column-header" contenteditable="true">12월 26일</div>
+        <div class="card" draggable="true" data-target="card.html" onclick="openModal(this.getAttribute('data-target'))">
+            <div class="task-header">프로젝트 계획</div>
+        </div>
+        <!-- ... 추가 카드 -->
+        <div class="task-new" onclick="addNewCard(this.parentElement)">+ 새로운 카드 추가</div>
+    </div>
+    <!-- 칼럼 1 끝 -->
+
+    <!-- 칼럼 2 시작 -->
+    <div class="column" draggable="true">
+        <div class="column-header" contenteditable="true">12월 27일</div>
+        <div class="card" draggable="true" data-target="card.html" onclick="openModal(this.getAttribute('data-target'))">
+            <div class="task-header">프로젝트 실행</div>
+        </div>
+        <!-- ... 추가 카드 -->
+        <div class="task-new" onclick="addNewCard(this.parentElement)">+ 새로운 카드 추가</div>
+    </div>
+    <!-- 칼럼 2 끝 -->
+
+    <!-- 칼럼 3 시작 -->
+    <div class="column" draggable="true">
+        <div class="column-header" contenteditable="true">12월 28일</div>
+        <div class="card" draggable="true" data-target="card.html" onclick="openModal(this.getAttribute('data-target'))">
+            <div class="task-header">프로젝트 완성</div>
+        </div>
+        <!-- ... 추가 카드 -->
+        <div class="task-new" onclick="addNewCard(this.parentElement)">+ 새로운 카드 추가</div>
+    </div>
+    <!-- 칼럼 3 끝 -->
+
+    <!-- 새로운 칼럼 추가 버튼 -->
+    <div class="column add-column">
+        <div class="add-column-button" onclick="addNewColumn()">+ 새로운 칼럼 추가</div>
+    </div>
+</div>
+
+<!-- 모달 -->
+<div id="myModal" class="modal">
+    <!-- 모달 컨텐츠 -->
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <iframe src="card.html" frameborder="0"></iframe>
+    </div>
+</div>
+
+<script src="../static/js/board.js"></script>
+</body>
+</html>
