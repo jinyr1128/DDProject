@@ -1,9 +1,11 @@
 package com.ddproject.board.dto;
 
 import com.ddproject.board.entity.Board;
+import lombok.Getter;
 
 import java.time.ZonedDateTime;
 
+@Getter
 public class BoardResponseDto {
 
 	private Long id;
@@ -16,7 +18,6 @@ public class BoardResponseDto {
 		this.boardTitle = board.getBoardTitle();
 		this.boardDescription = board.getBoardDescription();
 		this.createdAt = board.getCreatedAt();
-	} //1
-
+	}
 
 }
