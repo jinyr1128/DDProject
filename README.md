@@ -19,7 +19,7 @@ DDProject는 개발자들이 프로젝트를 더 효율적으로 진행하고, �
 - ![Gradle](https://img.shields.io/badge/Gradle-02303A.svg?style=for-the-badge&logo=Gradle&logoColor=white) 8.5
 - Spring Boot 3.2.1
 - JPA/Hibernate
-- Spring Security
+- Spring Security 6
 
 ## ⚙구현기능
 - **사용자 관리 기능**
