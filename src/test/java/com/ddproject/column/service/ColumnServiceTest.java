@@ -20,12 +20,13 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 
 @ExtendWith(SpringExtension.class)
@@ -134,19 +135,19 @@ public class ColumnServiceTest {
         assertEquals(1L, result.getBoardId());
     }
 
-//    @Test
-//    @DisplayName("컬럼 삭제 테스트")
-//    public void deleteColumnTest() {
-//
-//        // Given
-//        Long columnId = 1L;
-//
-//        // When
-//        columnService.deleteColumn(columnId);
-//
-//        // Then
-//        verify(columnRepository, times(1)).deleteById(columnId);
-//    }
+    @Test
+    @DisplayName("컬럼 삭제 테스트")
+    public void deleteColumnTest() {
+
+        // Given
+        Long columnId = 1L;
+
+        // When
+        columnService.deleteColumn(columnId);
+
+        // Then
+        verify(columnRepository, times(1)).deleteById(columnId);
+    }
 //    @Test
 //    @DisplayName("보드의 모든 컬럼 가져오기 테스트")
 //    public void getAllColumnsTest() {
