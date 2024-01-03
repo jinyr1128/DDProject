@@ -11,19 +11,22 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-
+import com.ddproject.column.repository.CustomColumnRepository;
+import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
 
 
 @ExtendWith(SpringExtension.class)
@@ -37,6 +40,8 @@ public class ColumnServiceTest {
     private ColumnRepository columnRepository;
     @Autowired
     private ColumnService columnService;
+    @Mock
+    private CustomColumnRepository customColumnRepository;
 
     @BeforeEach
     public void setup() {
@@ -72,72 +77,106 @@ public class ColumnServiceTest {
         assertEquals(boardId, result.getBoardId());
     }
 
+    @Test
+    @DisplayName("컬럼 이름 업데이트 테스트")
+    public void updateColumnNameTest() {
+        // Given
+        Long columnId = 1L;
+        String newName = "Updated Name";
 
-//    @Test
-//    @DisplayName("컬럼 이름 업데이트 테스트")
-//    public void updateColumnNameTest() {
-//        // Given
-//        Long columnId = 1L;
-//        String newName = "Updated Name";
-//        Column column = new Column();
-//        column.setId(columnId);
-//        column.setName("Original Name");
-//        when(columnRepository.findById(columnId)).thenReturn(Optional.of(column));
-//        when(columnRepository.save(any(Column.class))).thenReturn(column);
-//
-//        // When
-//        ColumnDto result = columnService.updateColumnName(columnId, newName);
-//
-//        // Then
-//        assertNotNull(result);
-//        assertEquals(newName, result.getName());
-//    }
-//    @Test
-//    @DisplayName("컬럼 시퀀스 업데이트 테스트")
-//    public void updateColumnSequenceTest() {
-//        // Given
-//        Long columnId = 1L;
-//        Integer newSequence = 2;
-//        Column column = new Column();
-//        column.setId(columnId);
-//        column.setSequence(1);
-//        when(columnRepository.findById(columnId)).thenReturn(Optional.of(column));
-//        when(columnRepository.save(any(Column.class))).thenReturn(column);
-//        when(customColumnRepository.findColumnsWithSequenceGreaterThanOrEqual(anyLong(), anyLong(), anyInt())).thenReturn(new ArrayList<>());
-//
-//        // When
-//        ColumnDto result = columnService.updateColumnSequence(columnId, newSequence);
-//
-//        // Then
-//        assertNotNull(result);
-//        assertEquals(newSequence, result.getSequence());
-//    }
-//    @Test
-//    @DisplayName("컬럼 삭제 테스트")
-//    public void deleteColumnTest() {
-//
-//        // Given
-//        Long columnId = 1L;
-//
-//        // When
-//        columnService.deleteColumn(columnId);
-//
-//        // Then
-//        verify(columnRepository, times(1)).deleteById(columnId);
-//    }
+        Board mockBoard = mock(Board.class); // Board 모의 객체 생성
+        // Board 모의 객체의 getId 메서드를 호출할 때 특정 값을 반환하도록 설정
+        when(mockBoard.getId()).thenReturn(1L);
+
+        Column column = new Column();
+        column.setId(columnId);
+        column.setName("Original Name");
+        column.setBoard(mockBoard); // Column 객체에 Board 모의 객체 설정
+
+        when(columnRepository.findById(columnId)).thenReturn(Optional.of(column));
+        when(columnRepository.save(any(Column.class))).thenReturn(column);
+
+        // When
+        ColumnResponse result = columnService.updateColumnName(columnId, newName);
+
+        // Then
+        assertNotNull(result);
+        assertEquals(newName, result.getName());
+        // Board의 getId 메서드 호출 결과 확인 (모의 객체이므로 실제 Board 객체의 상태 변경은 일어나지 않음)
+        assertEquals(1L, result.getBoardId());
+    }
+
+
+    @Test
+    @DisplayName("컬럼 시퀀스 업데이트 테스트")
+    public void updateColumnSequenceTest() {
+        // Given
+        Long columnId = 1L;
+        Integer newSequence = 2;
+
+        Board mockBoard = mock(Board.class);
+        when(mockBoard.getId()).thenReturn(1L);
+
+        Column column = new Column();
+        column.setId(columnId);
+        column.setSequence(1);
+        column.setBoard(mockBoard);
+
+        when(columnRepository.findById(columnId)).thenReturn(Optional.of(column));
+        when(columnRepository.save(any(Column.class))).thenReturn(column);
+        when(customColumnRepository.findColumnsWithSequenceGreaterThanOrEqual(anyLong(), anyLong(), anyInt())).thenReturn(new ArrayList<>());
+
+        // When
+        ColumnResponse result = columnService.updateColumnSequence(columnId, newSequence);
+
+        // Then
+        assertNotNull(result);
+        assertEquals(newSequence, result.getSequence());
+        assertEquals(1L, result.getBoardId());
+    }
+
+    @Test
+    @DisplayName("컬럼 삭제 테스트")
+    public void deleteColumnTest() {
+
+        // Given
+        Long columnId = 1L;
+
+        // When
+        columnService.deleteColumn(columnId);
+
+        // Then
+        verify(columnRepository, times(1)).deleteById(columnId);
+    }
 //    @Test
 //    @DisplayName("보드의 모든 컬럼 가져오기 테스트")
 //    public void getAllColumnsTest() {
 //        // Given
 //        Long boardId = 1L;
-//        List<Column> columns = Arrays.asList(new Column(), new Column());
+//        Board mockBoard = mock(Board.class);
+//        when(mockBoard.getId()).thenReturn(boardId);
+//
+//        Column column1 = createTestColumn(1L, "Column 1", "Description 1", 1, mockBoard);
+//        Column column2 = createTestColumn(2L, "Column 2", "Description 2", 2, mockBoard);
+//        List<Column> columns = Arrays.asList(column1, column2);
 //        when(customColumnRepository.findAllColumnsByBoardIdOrderedBySequence(boardId)).thenReturn(columns);
 //
 //        // When
-//        List<ColumnDto> result = columnService.getAllColumns(boardId);
+//        List<ColumnResponse> result = columnService.getAllColumns(boardId);
 //
 //        // Then
 //        assertNotNull(result);
 //        assertEquals(2, result.size());
+//        assertEquals("Column 1", result.get(0).getName());
+//        assertEquals("Column 2", result.get(1).getName());
+//    }
+//    private Column createTestColumn(Long id, String name, String description, int sequence, Board board) {
+//        Column column = new Column();
+//        column.setId(id);
+//        column.setName(name);
+//        column.setDescription(description);
+//        column.setSequence(sequence);
+//        column.setBoard(board);
+//        return column;
 //    }
 }
