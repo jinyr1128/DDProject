@@ -80,187 +80,36 @@ DDProject는 개발자들이 프로젝트를 더 효율적으로 진행하고, �
 
 ## 💾디렉토리 구조 
 ```agsl
-    ├── main
-    │   ├── java
-    │   │   └── com
-    │   │       └── ddproject
-    │   │           ├── DdProjectApplication.java
-    │   │           ├── alarm
-    │   │           │   ├── dto
-    │   │           │   │   └── AlarmDto.java
-    │   │           │   ├── entity
-    │   │           │   │   └── Alarm.java
-    │   │           │   ├── model
-    │   │           │   │   ├── AlarmArgs.java
-    │   │           │   │   └── AlarmType.java
-    │   │           │   ├── repository
-    │   │           │   │   ├── AlarmRepository.java
-    │   │           │   │   └── EmitterRepository.java
-    │   │           │   └── service
-    │   │           │       ├── AlarmService.java
-    │   │           │       └── impl
-    │   │           │           └── AlarmServiceImpl.java
-    │   │           ├── board
-    │   │           │   ├── BoardController.java
-    │   │           │   ├── BoardRepository.java
-    │   │           │   ├── BoardService.java
-    │   │           │   ├── dto
-    │   │           │   │   ├── BoardRequestDto.java
-    │   │           │   │   └── BoardResponseDto.java
-    │   │           │   └── entity
-    │   │           │       └── Board.java
-    │   │           ├── card
-    │   │           │   ├── controller
-    │   │           │   │   └── CardController.java
-    │   │           │   ├── dto
-    │   │           │   │   └── CardDto.java
-    │   │           │   ├── entity
-    │   │           │   │   └── Card.java
-    │   │           │   ├── exception
-    │   │           │   │   ├── CardErrorCode.java
-    │   │           │   │   └── CardException.java
-    │   │           │   ├── repository
-    │   │           │   │   └── CardRepository.java
-    │   │           │   └── service
-    │   │           │       └── CardService.java
-    │   │           ├── column
-    │   │           │   ├── config
-    │   │           │   │   └── QueryDslConfig.java
-    │   │           │   ├── controller
-    │   │           │   │   └── ColumnController.java
-    │   │           │   ├── dto
-    │   │           │   │   └── ColumnDto.java
-    │   │           │   ├── entity
-    │   │           │   │   └── Column.java
-    │   │           │   ├── exception
-    │   │           │   │   ├── ColumnErrorCode.java
-    │   │           │   │   └── ColumnException.java
-    │   │           │   ├── repository
-    │   │           │   │   ├── ColumnRepository.java
-    │   │           │   │   ├── CustomColumnRepository.java
-    │   │           │   │   └── CustomColumnRepositoryImpl.java
-    │   │           │   └── service
-    │   │           │       └── ColumnService.java
-    │   │           ├── comment
-    │   │           │   ├── controller
-    │   │           │   │   └── CommentController.java
-    │   │           │   ├── dto
-    │   │           │   │   └── CommentDto.java
-    │   │           │   ├── entity
-    │   │           │   │   └── Comment.java
-    │   │           │   ├── exception
-    │   │           │   │   ├── CommentErrorCode.java
-    │   │           │   │   └── CommentException.java
-    │   │           │   ├── repository
-    │   │           │   │   └── CommentRepository.java
-    │   │           │   └── service
-    │   │           │       └── CommentService.java
-    │   │           ├── common
-    │   │           │   ├── config
-    │   │           │   │   ├── CustomSecurityConfig.java
-    │   │           │   │   ├── RootConfig.java
-    │   │           │   │   └── SwaggerConfig.java
-    │   │           │   ├── security
-    │   │           │   │   ├── UserDetailsServiceImpl.java
-    │   │           │   │   ├── exception
-    │   │           │   │   │   ├── AccessTokenException.java
-    │   │           │   │   │   └── RefreshTokenException.java
-    │   │           │   │   ├── filter
-    │   │           │   │   │   ├── APILoginFilter.java
-    │   │           │   │   │   ├── RefreshTokenFilter.java
-    │   │           │   │   │   └── TokenCheckFilter.java
-    │   │           │   │   └── handler
-    │   │           │   │       └── APILoginSuccessHandler.java
-    │   │           │   └── util
-    │   │           │       └── JWTUtil.java
-    │   │           ├── global
-    │   │           │   ├── advice
-    │   │           │   │   └── CustomRestAdvice.java
-    │   │           │   ├── exception
-    │   │           │   │   ├── CustomException.java
-    │   │           │   │   └── ErrorCode.java
-    │   │           │   └── response
-    │   │           │       └── Response.java
-    │   │           ├── invite
-    │   │           │   ├── controller
-    │   │           │   │   └── InviteController.java
-    │   │           │   ├── dto
-    │   │           │   │   └── InviteDto.java
-    │   │           │   ├── entity
-    │   │           │   │   └── Invite.java
-    │   │           │   ├── repository
-    │   │           │   │   └── InviteRepository.java
-    │   │           │   └── service
-    │   │           │       ├── InviteService.java
-    │   │           │       └── impl
-    │   │           │           └── InviteServiceImpl.java
-    │   │           ├── member
-    │   │           │   ├── BoardMember.java
-    │   │           │   ├── BoardMemberEnum.java
-    │   │           │   ├── BoardMemberRepository.java
-    │   │           │   ├── BoardMemberStatus.java
-    │   │           │   ├── MemberController.java
-    │   │           │   ├── MemberDetailsImpl.java
-    │   │           │   ├── MemberService.java
-    │   │           │   └── dto
-    │   │           │       ├── MemberRequestDto.java
-    │   │           │       └── MemberResponseDto.java
-    │   │           └── user
-    │   │               ├── controller
-    │   │               │   └── UserController.java
-    │   │               ├── domain
-    │   │               │   └── User.java
-    │   │               ├── dto
-    │   │               │   ├── CheckRequestDto.java
-    │   │               │   ├── PasswordDto.java
-    │   │               │   ├── SignupResponseDto.java
-    │   │               │   ├── SignupUserDto.java
-    │   │               │   └── UserDto.java
-    │   │               ├── repository
-    │   │               │   └── UserRepository.java
-    │   │               ├── service
-    │   │               │   ├── UserService.java
-    │   │               │   └── impl
-    │   │               │       └── UserServiceImpl.java
-    │   │               └── validation
-    │   │                   └── SignupValidator.java
-    │   └── resources
-    │       ├── application.yml
-    │       ├── static
-    │       │   ├── css
-    │       │   │   ├── board.css
-    │       │   │   └── card.css
-    │       │   ├── images
-    │       │   ├── js
-    │       │   │   ├── board.js
-    │       │   │   └── card.js
-    │       │   ├── loginPage.html
-    │       │   └── refreshTest.html
-    │       └── templates
-    │           ├── board.html
-    │           ├── card.html
-    │           ├── oauthLogin.html
-    │           └── signup.html
-    └── test
-        └── java
-            └── com
-                └── ddproject
-                    ├── DdProjectApplicationTests.java
-                    ├── common
-                    │   └── util
-                    │       └── JWTUtilTest.java
-                    └── user
-                        ├── controller
-                        │   └── UserControllerTest.java
-                        ├── repository
-                        │   └── UserRepositoryTest.java
-                        └── service
-                            └── UserServiceTest.java
+├── DdProjectApplication.java
+ ├── alarm
+ ├── board
+ ├── card
+ ├── column
+ ├── comment
+ ├── common
+ │   ├── security
+ ├── global
+ ├── invite
+ ├── member
+ └── user
+ └── resources
+ ├── static
+ │   ├── css
+ │   ├── images
+ │   ├── js
+ └── templates
 ```
 
 ## 📊Swagger-Ui
-클론 후 실행한 뒤 Swagger 사용
-* [API 테스트](http://localhost:8080/swagger-ui/index.html)
+![스크린샷 2024-01-03 오후 7.49.02.png](img%2F%EC%8A%A4%ED%81%AC%EB%A6%B0%EC%83%B7%202024-01-03%20%EC%98%A4%ED%9B%84%207.49.02.png)
+![스크린샷 2024-01-03 오후 7.49.12.png](img%2F%EC%8A%A4%ED%81%AC%EB%A6%B0%EC%83%B7%202024-01-03%20%EC%98%A4%ED%9B%84%207.49.12.png)
+![스크린샷 2024-01-03 오후 7.49.02.png](img%2F%EC%8A%A4%ED%81%AC%EB%A6%B0%EC%83%B7%202024-01-03%20%EC%98%A4%ED%9B%84%207.49.02.png)
+![스크린샷 2024-01-03 오후 7.49.12.png](img%2F%EC%8A%A4%ED%81%AC%EB%A6%B0%EC%83%B7%202024-01-03%20%EC%98%A4%ED%9B%84%207.49.12.png)
+![스크린샷 2024-01-03 오후 7.49.21.png](img%2F%EC%8A%A4%ED%81%AC%EB%A6%B0%EC%83%B7%202024-01-03%20%EC%98%A4%ED%9B%84%207.49.21.png)
+![스크린샷 2024-01-03 오후 7.49.31.png](img%2F%EC%8A%A4%ED%81%AC%EB%A6%B0%EC%83%B7%202024-01-03%20%EC%98%A4%ED%9B%84%207.49.31.png)
+![스크린샷 2024-01-03 오후 7.49.43.png](img%2F%EC%8A%A4%ED%81%AC%EB%A6%B0%EC%83%B7%202024-01-03%20%EC%98%A4%ED%9B%84%207.49.43.png)
+![스크린샷 2024-01-03 오후 7.49.53.png](img%2F%EC%8A%A4%ED%81%AC%EB%A6%B0%EC%83%B7%202024-01-03%20%EC%98%A4%ED%9B%84%207.49.53.png)
+![스크린샷 2024-01-03 오후 7.50.03.png](img%2F%EC%8A%A4%ED%81%AC%EB%A6%B0%EC%83%B7%202024-01-03%20%EC%98%A4%ED%9B%84%207.50.03.png)
 ## 📔Documents
 ![스크린샷 2023-12-26 오후 3.11.18.png](img%2F%EC%8A%A4%ED%81%AC%EB%A6%B0%EC%83%B7%202023-12-26%20%EC%98%A4%ED%9B%84%203.11.18.png)
 ## 📸Screenshot
