@@ -153,14 +153,30 @@ public class ColumnServiceTest {
 //    public void getAllColumnsTest() {
 //        // Given
 //        Long boardId = 1L;
-//        List<Column> columns = Arrays.asList(new Column(), new Column());
+//        Board mockBoard = mock(Board.class);
+//        when(mockBoard.getId()).thenReturn(boardId);
+//
+//        Column column1 = createTestColumn(1L, "Column 1", "Description 1", 1, mockBoard);
+//        Column column2 = createTestColumn(2L, "Column 2", "Description 2", 2, mockBoard);
+//        List<Column> columns = Arrays.asList(column1, column2);
 //        when(customColumnRepository.findAllColumnsByBoardIdOrderedBySequence(boardId)).thenReturn(columns);
 //
 //        // When
-//        List<ColumnDto> result = columnService.getAllColumns(boardId);
+//        List<ColumnResponse> result = columnService.getAllColumns(boardId);
 //
 //        // Then
 //        assertNotNull(result);
 //        assertEquals(2, result.size());
+//        assertEquals("Column 1", result.get(0).getName());
+//        assertEquals("Column 2", result.get(1).getName());
+//    }
+//    private Column createTestColumn(Long id, String name, String description, int sequence, Board board) {
+//        Column column = new Column();
+//        column.setId(id);
+//        column.setName(name);
+//        column.setDescription(description);
+//        column.setSequence(sequence);
+//        column.setBoard(board);
+//        return column;
 //    }
 }
