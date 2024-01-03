@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -106,33 +106,33 @@ public class ColumnServiceTest {
     }
 
 
-//    @Test
-//    @DisplayName("컬럼 시퀀스 업데이트 테스트")
-//    public void updateColumnSequenceTest() {
-//        // Given
-//        Long columnId = 1L;
-//        Integer newSequence = 2;
-//
-//        Board mockBoard = mock(Board.class);
-//        when(mockBoard.getId()).thenReturn(1L);
-//
-//        Column column = new Column();
-//        column.setId(columnId);
-//        column.setSequence(1);
-//        column.setBoard(mockBoard);
-//
-//        when(columnRepository.findById(columnId)).thenReturn(Optional.of(column));
-//        when(columnRepository.save(any(Column.class))).thenReturn(column);
-//        when(customColumnRepository.findColumnsWithSequenceGreaterThanOrEqual(anyLong(), anyLong(), anyInt())).thenReturn(new ArrayList<>());
-//
-//        // When
-//        ColumnResponse result = columnService.updateColumnSequence(columnId, newSequence);
-//
-//        // Then
-//        assertNotNull(result);
-//        assertEquals(newSequence, result.getSequence());
-//        assertEquals(1L, result.getBoardId());
-//    }
+    @Test
+    @DisplayName("컬럼 시퀀스 업데이트 테스트")
+    public void updateColumnSequenceTest() {
+        // Given
+        Long columnId = 1L;
+        Integer newSequence = 2;
+
+        Board mockBoard = mock(Board.class);
+        when(mockBoard.getId()).thenReturn(1L);
+
+        Column column = new Column();
+        column.setId(columnId);
+        column.setSequence(1);
+        column.setBoard(mockBoard);
+
+        when(columnRepository.findById(columnId)).thenReturn(Optional.of(column));
+        when(columnRepository.save(any(Column.class))).thenReturn(column);
+        when(customColumnRepository.findColumnsWithSequenceGreaterThanOrEqual(anyLong(), anyLong(), anyInt())).thenReturn(new ArrayList<>());
+
+        // When
+        ColumnResponse result = columnService.updateColumnSequence(columnId, newSequence);
+
+        // Then
+        assertNotNull(result);
+        assertEquals(newSequence, result.getSequence());
+        assertEquals(1L, result.getBoardId());
+    }
 
 //    @Test
 //    @DisplayName("컬럼 삭제 테스트")
