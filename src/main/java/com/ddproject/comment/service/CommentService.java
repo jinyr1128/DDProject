@@ -8,6 +8,7 @@ import com.ddproject.comment.entity.Comment;
 import com.ddproject.comment.exception.CommentErrorCode;
 import com.ddproject.comment.exception.CommentException;
 import com.ddproject.comment.repository.CommentRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,16 +17,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class CommentService {
     private final CommentRepository commentRepository;
     private final CardRepository cardRepository;
 
-    @Autowired
-    public CommentService(CommentRepository commentRepository, CardRepository cardRepository) {
-        this.commentRepository = commentRepository;
-        this.cardRepository = cardRepository;
-    }
-
+    @Transactional
     public CommentResponse createComment(Long cardId, CommentRequest request, Long userId) {
         Card card = cardRepository.findById(cardId)
                 .orElseThrow(() -> new CommentException(CommentErrorCode.CARD_NOT_FOUND));
@@ -39,6 +36,7 @@ public class CommentService {
         return convertEntityToResponse(savedComment);
     }
 
+    @Transactional(readOnly = true)
     public List<CommentResponse> getCommentsByCardId(Long cardId) {
         return commentRepository.findByCardId(cardId).stream()
                 .map(this::convertEntityToResponse)

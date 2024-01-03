@@ -1,6 +1,5 @@
 package com.ddproject.invite.entity;
 
-import com.ddproject.member.entity.BoardMember;
 import com.ddproject.member.entity.BoardMemberEnum;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

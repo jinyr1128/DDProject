@@ -75,9 +75,9 @@ public class BoardController {
 
 	@Operation(summary = "유저가 가입한 모든 멤버 조회")
 	@GetMapping("/userBoards")
-	public ResponseEntity<List<BoardResponseDto>> getUserBoards(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+	public ResponseEntity<Response<List<BoardResponseDto>>> getUserBoards(@AuthenticationPrincipal UserDetailsImpl userDetails) {
 		List<BoardResponseDto> boards = boardService.getUserBoards(userDetails);
-		return ResponseEntity.ok(boards);
+		return ResponseEntity.ok(Response.success(boards));
 	}
 
 }
