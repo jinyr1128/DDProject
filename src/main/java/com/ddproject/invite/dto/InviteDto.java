@@ -12,7 +12,6 @@ import lombok.*;
 public class InviteDto {
     @NotBlank
     private String recvUsername;;
-    @NotBlank
     private Long boardId;
     @Builder.Default
     private BoardMemberEnum role = BoardMemberEnum.MEMBER;
