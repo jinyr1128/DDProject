@@ -1,24 +1,27 @@
-package com.ddproject.member;
+package com.ddproject.member.entity;
 
 import com.ddproject.board.entity.Board;
 import com.ddproject.user.domain.User;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.ZonedDateTime;
-import java.util.UUID;
 
 @Entity
 @Getter
 @NoArgsConstructor
+@Builder
+@AllArgsConstructor
 @Table(name = "Board_Invited_Users")
 public class BoardMember {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name = "member_id", updatable = false, nullable = false)
-	private UUID id;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "member_id")
+	private Long id;
 
 	@ManyToOne
 	@JoinColumn(name = "board_id")
@@ -30,7 +33,7 @@ public class BoardMember {
 
 	@Column
 	@Enumerated(EnumType.STRING)
-	private BoardMemberEnum role = BoardMemberEnum.MEMBER;
+	private BoardMemberEnum role;
 
 	@Enumerated(EnumType.STRING)
 	private BoardMemberStatus status = BoardMemberStatus.ACTIVE;
@@ -50,9 +53,14 @@ public class BoardMember {
 	}
 
 	public BoardMember(Board board, User user, String nickname) {
+		this(board, user, nickname, BoardMemberEnum.ADMIN);
+	}
+
+	public BoardMember(Board board, User user, String nickname, BoardMemberEnum role) {
 		this.user = user;
 		this.board = board;
 		this.nickname = nickname;
+		this.role = role;
 	}
 
 	public void updateNickname(String newNickname) {
@@ -75,6 +83,5 @@ public class BoardMember {
 	public void setBoard(Board board) {
 		this.board = board;
 	}
-
 
 }

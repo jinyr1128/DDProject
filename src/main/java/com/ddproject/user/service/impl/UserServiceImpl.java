@@ -25,7 +25,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Log4j2
 @RequiredArgsConstructor
-@Transactional
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
@@ -37,6 +36,7 @@ public class UserServiceImpl implements UserService {
 
     // TODO : implement
     @Override
+    @Transactional
     public SignupResponseDto signup(SignupUserDto signupUserDto) {
         userRepository.findByUsername(signupUserDto.getUsername()).ifPresent(it -> {
             throw new CustomException(ErrorCode.DUPLICATED_USER_NAME, String.format("%s is duplicated", signupUserDto.getUsername()));
@@ -54,6 +54,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public boolean validateSignup(CheckRequestDto checkRequestDto) {
         // 검증할 필드 id, email 등등
         String type = checkRequestDto.getType();
@@ -72,21 +73,25 @@ public class UserServiceImpl implements UserService {
 
     // TODO : implement
     @Override
+    @Transactional
     public void changePw(PasswordDto passwordDto, String username) {
         User user = userRepository.findByUsername(username).orElseThrow();
 
         boolean isCorrect = passwordEncoder.matches(passwordDto.getCurrentPw(), user.getPassword());
-        if (isCorrect) {
-            user.changePw(passwordDto.getChangePw());
-            userRepository.save(user);
-        } else {
-            throw new CustomException(ErrorCode.INVALID_PASSWORD, "failed");
+        if (!isCorrect) {
+            throw new CustomException(ErrorCode.INVALID_PASSWORD, "비밀번호를 확인해주세요");
         }
 
+        if (passwordDto.getCurrentPw().equals(passwordDto.getChangePw())) {
+            throw new CustomException(ErrorCode.INVALID_PASSWORD, "현재 패스워드와 같습니다.");
+        }
 
+        user.changePw(passwordEncoder.encode(passwordDto.getChangePw()));
+        userRepository.save(user);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Page<AlarmDto> alarmList(String username, Pageable pageable) {
         User user = userRepository.findByUsername(username).orElseThrow(() -> {
             throw new CustomException(ErrorCode.USER_NOT_FOUND, String.format("%s not founded", username));

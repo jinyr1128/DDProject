@@ -1,18 +1,20 @@
 package com.ddproject.invite.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.ddproject.member.entity.BoardMemberEnum;
+import jakarta.validation.constraints.NotBlank;
+import lombok.*;
 
 @Data
 @Builder
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 public class InviteDto {
-    private String sendUsername;
+    @NotBlank
     private String recvUsername;;
-    private String boardKey;
-
+    @NotBlank
+    private Long boardId;
+    @Builder.Default
+    private BoardMemberEnum role = BoardMemberEnum.MEMBER;
 
 }

@@ -13,6 +13,4 @@ public class CustomException extends RuntimeException{
         this.errorCode = errorCode;
         this.msg = null;
     }
-
-
 }

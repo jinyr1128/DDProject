@@ -1,4 +1,4 @@
-package com.ddproject.member;
+package com.ddproject.member.entity;
 
 import lombok.Getter;
 
@@ -20,4 +20,5 @@ public enum BoardMemberStatus {
 		public static final String DORMANT = "DORMANT";
 		public static final String ACTIVE = "ACTIVE";
 	}
+
 }

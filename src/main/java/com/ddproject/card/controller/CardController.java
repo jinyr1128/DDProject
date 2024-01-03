@@ -1,9 +1,13 @@
 package com.ddproject.card.controller;
 
-import com.ddproject.card.dto.CardDto;
-import com.ddproject.card.entity.Card;
+import com.ddproject.card.dto.CardRequest;
+import com.ddproject.card.dto.CardResponse;
+import com.ddproject.card.exception.CardErrorCode;
+import com.ddproject.card.exception.CardException;
 import com.ddproject.card.service.CardService;
+import com.ddproject.common.security.UserDetailsImpl;
 import com.ddproject.user.domain.User;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,50 +25,64 @@ public class CardController {
         this.cardService = cardService;
     }
 
+    @Operation(summary = "카드 생성")
     @PostMapping
     public ResponseEntity<?> createCard(@PathVariable Long boardId,
                                         @PathVariable Long columnId,
-                                        @RequestBody CardDto cardDto,
-                                        @AuthenticationPrincipal User user) {
-        if (!cardService.isUserAllowedToAccessCard(boardId, user.getId())) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access Denied");
+                                        @RequestBody CardRequest request,
+                                        @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        User user = userDetails.getUser();
+        try {
+            if (!cardService.isUserAllowedToAccessCard(boardId, user.getId())) {
+                throw new CardException(CardErrorCode.FORBIDDEN_CARD_ACCESS);
+            }
+            CardResponse createdCard = cardService.createCard(boardId, columnId, request);
+            return new ResponseEntity<>(createdCard, HttpStatus.CREATED);
+        } catch (CardException e) {
+            return ResponseEntity
+                    .status(e.getCardErrorCode().getStatus())
+                    .body(e.getMsg());
         }
-        CardDto createdCard = cardService.createCard(boardId, columnId, cardDto);
-        return new ResponseEntity<>(createdCard, HttpStatus.CREATED);
     }
-
+    @Operation(summary = "카드 시퀀스 업데이트")
     @PatchMapping("/{cardId}/sequence")
     public ResponseEntity<?> updateCardSequence(@PathVariable Long columnId,
                                                 @PathVariable Long cardId,
-                                                @RequestBody CardDto cardDto,
-                                                @AuthenticationPrincipal User user) {
+                                                @RequestBody CardRequest request,
+                                                @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        User user = userDetails.getUser();
         if (!cardService.isUserAllowedToAccessCard(columnId, user.getId())) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access Denied");
+            throw new CardException(CardErrorCode.FORBIDDEN_CARD_ACCESS);
+//            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access Denied");
         }
-        cardService.updateCardSequence(cardId, cardDto.getSequence());
+        cardService.updateCardSequence(cardId, request.getSequence());
         return ResponseEntity.ok().build();
     }
 
+    @Operation(summary = "카드 업데이트")
     @PatchMapping("/{cardId}")
-    public ResponseEntity<?> updateCard(@PathVariable Long cardId,
-                                        @RequestBody CardDto cardDto) {
-        Card updatedCard = cardService.updateCard(cardId, cardDto);
-        return updatedCard != null ? ResponseEntity.ok().build() : ResponseEntity.notFound().build();
+    public ResponseEntity<CardResponse> updateCard(@PathVariable Long cardId,
+                                                   @RequestBody CardRequest request) {
+        CardResponse updatedCard = cardService.updateCard(cardId, request);
+        return ResponseEntity.ok(updatedCard);
     }
 
+    @Operation(summary = "카드 삭제")
     @DeleteMapping("/{cardId}")
     public ResponseEntity<?> deleteCard(@PathVariable Long cardId) {
         boolean deleted = cardService.deleteCard(cardId);
         return deleted ? ResponseEntity.ok().build() : ResponseEntity.notFound().build();
     }
 
+    @Operation(summary = "카드 위치 변경")
     @PatchMapping("/{cardId}/move")
     public ResponseEntity<?> moveCard(@PathVariable Long cardId,
                                       @RequestParam Long newColumnId,
                                       @RequestParam int newSequence,
-                                      @AuthenticationPrincipal User user) {
+                                      @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        User user = userDetails.getUser();
         if (!cardService.isUserAllowedToAccessCard(newColumnId, user.getId())) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access Denied");
+            throw new CardException(CardErrorCode.FORBIDDEN_CARD_ACCESS);
         }
         cardService.moveCardToAnotherColumn(cardId, newColumnId, newSequence);
         return ResponseEntity.ok().build();

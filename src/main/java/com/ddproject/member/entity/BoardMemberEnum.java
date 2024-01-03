@@ -1,4 +1,4 @@
-package com.ddproject.member;
+package com.ddproject.member.entity;
 
 import lombok.Getter;
 

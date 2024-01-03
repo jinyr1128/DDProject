@@ -1,30 +1,46 @@
 package com.ddproject.invite.controller;
 
+import com.ddproject.common.security.UserDetailsImpl;
 import com.ddproject.global.response.Response;
 import com.ddproject.invite.dto.InviteDto;
+import com.ddproject.invite.dto.InviteResponseDto;
+import com.ddproject.invite.service.InviteService;
+import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.BindException;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
 @Log4j2
+@RequestMapping("/api/v1/invite")
 public class InviteController {
+    private final InviteService inviteService;
 
-    // TODO - implement : 경로값으로 받는 유저는 받는 유저이다.
+    @Operation(summary = "멤버 초대")
+    @PostMapping
+    public ResponseEntity<Response<Void>> requestInvite(@RequestBody @Valid InviteDto inviteDto,
+                                                        @AuthenticationPrincipal UserDetailsImpl userDetails, BindingResult bindingResult)throws BindException {
+        if (bindingResult.hasErrors()) {
+            throw new BindException(bindingResult);
+        }
 
-    @PostMapping("/invite/{username}")
-    public Response<Void> requestInvite(@PathVariable("username") String username, @AuthenticationPrincipal UserDetails userDetails) {
-        InviteDto inviteDTO = InviteDto.builder()
-                .sendUsername(userDetails.getUsername())
-                .recvUsername(username)
-                .boardKey("....")
-                .build();
-        return Response.success();
+        inviteService.submitInvite(inviteDto, userDetails.getUsername());
+        return ResponseEntity.ok(Response.success());
+    }
+
+    @Operation(summary = "유저 자신의 초대 목록 조회")
+    @GetMapping
+    public ResponseEntity<Response<List<InviteResponseDto>>> readInvite(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return ResponseEntity.ok(Response.success(inviteService.readInvite(userDetails.getUsername())));
+
     }
 
 }
