@@ -1,4 +1,4 @@
-package com.ddproject.alarm.model;
+package com.ddproject.alarm.args;
 
 import lombok.Data;
 

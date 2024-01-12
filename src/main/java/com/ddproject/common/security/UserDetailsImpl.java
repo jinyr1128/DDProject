@@ -1,6 +1,6 @@
 package com.ddproject.common.security;
 
-import com.ddproject.user.domain.User;
+import com.ddproject.user.entity.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 

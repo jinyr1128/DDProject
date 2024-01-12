@@ -1,10 +1,9 @@
 package com.ddproject.alarm.entity;
 
-import com.ddproject.alarm.model.AlarmArgs;
-import com.ddproject.alarm.model.AlarmType;
-import com.ddproject.user.domain.User;
+import com.ddproject.alarm.args.AlarmArgs;
+import com.ddproject.alarm.enums.AlarmType;
+import com.ddproject.user.entity.User;
 
-import com.vladmihalcea.hibernate.type.json.JsonType;
 import org.hibernate.annotations.JdbcTypeCode;
 
 import jakarta.persistence.*;

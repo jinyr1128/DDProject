@@ -1,7 +1,7 @@
 package com.ddproject.invite.controller;
 
 import com.ddproject.common.security.UserDetailsImpl;
-import com.ddproject.global.response.Response;
+import com.ddproject.global.response.ApiResponse;
 import com.ddproject.invite.dto.InviteDto;
 import com.ddproject.invite.dto.InviteResponseDto;
 import com.ddproject.invite.service.InviteService;
@@ -26,20 +26,20 @@ public class InviteController {
 
     @Operation(summary = "멤버 초대")
     @PostMapping
-    public ResponseEntity<Response<Void>> requestInvite(@RequestBody @Valid InviteDto inviteDto,
-                                                        @AuthenticationPrincipal UserDetailsImpl userDetails, BindingResult bindingResult)throws BindException {
+    public ResponseEntity<ApiResponse<Void>> requestInvite(@RequestBody @Valid InviteDto inviteDto,
+                                                           @AuthenticationPrincipal UserDetailsImpl userDetails, BindingResult bindingResult)throws BindException {
         if (bindingResult.hasErrors()) {
             throw new BindException(bindingResult);
         }
 
         inviteService.submitInvite(inviteDto, userDetails.getUsername());
-        return ResponseEntity.ok(Response.success());
+        return ResponseEntity.ok(ApiResponse.success());
     }
 
     @Operation(summary = "유저 자신의 초대 목록 조회")
     @GetMapping
-    public ResponseEntity<Response<List<InviteResponseDto>>> readInvite(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return ResponseEntity.ok(Response.success(inviteService.readInvite(userDetails.getUsername())));
+    public ResponseEntity<ApiResponse<List<InviteResponseDto>>> readInvite(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return ResponseEntity.ok(ApiResponse.success(inviteService.readInvite(userDetails.getUsername())));
 
     }
 

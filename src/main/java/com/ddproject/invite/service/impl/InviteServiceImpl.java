@@ -14,7 +14,7 @@ import com.ddproject.member.entity.BoardMember;
 import com.ddproject.member.entity.BoardMemberEnum;
 import com.ddproject.member.entity.BoardMemberStatus;
 import com.ddproject.member.repository.BoardMemberRepository;
-import com.ddproject.user.domain.User;
+import com.ddproject.user.entity.User;
 import com.ddproject.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;

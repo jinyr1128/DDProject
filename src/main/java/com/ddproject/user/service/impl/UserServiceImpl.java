@@ -4,7 +4,7 @@ import com.ddproject.alarm.dto.AlarmDto;
 import com.ddproject.alarm.repository.AlarmRepository;
 import com.ddproject.global.exception.CustomException;
 import com.ddproject.global.exception.ErrorCode;
-import com.ddproject.user.domain.User;
+import com.ddproject.user.entity.User;
 import com.ddproject.user.dto.CheckRequestDto;
 import com.ddproject.user.dto.PasswordDto;
 import com.ddproject.user.dto.SignupResponseDto;

@@ -4,7 +4,7 @@ import com.ddproject.board.service.BoardService;
 import com.ddproject.board.dto.BoardRequestDto;
 import com.ddproject.board.dto.BoardResponseDto;
 import com.ddproject.common.security.UserDetailsImpl;
-import com.ddproject.global.response.Response;
+import com.ddproject.global.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
@@ -26,58 +26,58 @@ public class BoardController {
 
 	@Operation(summary = "보드 생성")
 	@PostMapping
-	public ResponseEntity<Response<BoardResponseDto>> createBoard(@Valid @RequestBody BoardRequestDto boardRequestDto,
-																  @AuthenticationPrincipal UserDetailsImpl userDetails) {
+	public ResponseEntity<ApiResponse<BoardResponseDto>> createBoard(@Valid @RequestBody BoardRequestDto boardRequestDto,
+																	 @AuthenticationPrincipal UserDetailsImpl userDetails) {
 		BoardResponseDto responseDto = boardService.createBoard(boardRequestDto, userDetails.getUser());
-		return ResponseEntity.status(HttpStatus.CREATED).body(Response.success(responseDto));
+		return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(responseDto));
 	}
 
 	@Operation(summary = "보드 조회")
 	@GetMapping("/{boardId}")
-	public ResponseEntity<Response<BoardResponseDto>> getBoard(@PathVariable Long boardId,
+	public ResponseEntity<ApiResponse<BoardResponseDto>> getBoard(@PathVariable Long boardId,
 															   @AuthenticationPrincipal UserDetailsImpl userDetails) {
 		BoardResponseDto responseDto = boardService.getBoard(boardId, userDetails);
-		return ResponseEntity.ok(Response.success(responseDto));
+		return ResponseEntity.ok(ApiResponse.success(responseDto));
 	}
 
 	@Operation(summary = "보드 업데이트")
 	@PutMapping("/{boardId}")
-	public ResponseEntity<Response<String>> updateBoard(@PathVariable Long boardId,
+	public ResponseEntity<ApiResponse<String>> updateBoard(@PathVariable Long boardId,
 														@Valid @RequestBody BoardRequestDto boardRequestDto,
 														@AuthenticationPrincipal UserDetailsImpl userDetails) {
 		try {
 			boardService.updateBoard(boardId, boardRequestDto, userDetails);
-			return ResponseEntity.ok(Response.success("보드 정보가 성공적으로 업데이트되었습니다."));
+			return ResponseEntity.ok(ApiResponse.success("보드 정보가 성공적으로 업데이트되었습니다."));
 		} catch (AccessDeniedException e) {
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Response.error("403", "수정 권한이 없습니다."));
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ApiResponse.error("403", "수정 권한이 없습니다."));
 		} catch (EntityNotFoundException e) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Response.error("404", "해당 보드를 찾을 수 없습니다."));
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ApiResponse.error("404", "해당 보드를 찾을 수 없습니다."));
 		} catch (IllegalArgumentException e) {
-			return ResponseEntity.badRequest().body(Response.error("400", e.getMessage()));
+			return ResponseEntity.badRequest().body(ApiResponse.error("400", e.getMessage()));
 		}
 	}
 
 	@Operation(summary = "보드 삭제")
 	@DeleteMapping("/{boardId}")
-	public ResponseEntity<Response<String>> deleteBoard(@PathVariable Long boardId,
+	public ResponseEntity<ApiResponse<String>> deleteBoard(@PathVariable Long boardId,
 														@AuthenticationPrincipal UserDetailsImpl userDetails) {
 		try {
 			boardService.deleteBoard(boardId, userDetails);
-			return ResponseEntity.ok(Response.success("보드가 성공적으로 삭제되었습니다."));
+			return ResponseEntity.ok(ApiResponse.success("보드가 성공적으로 삭제되었습니다."));
 		} catch (AccessDeniedException e) {
 			return ResponseEntity.status(HttpStatus.FORBIDDEN)
-					.body(Response.error("403", "삭제 권한이 없습니다."));
+					.body(ApiResponse.error("403", "삭제 권한이 없습니다."));
 		} catch (EntityNotFoundException e) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND)
-					.body(Response.error("404", "해당 보드를 찾을 수 없습니다."));
+					.body(ApiResponse.error("404", "해당 보드를 찾을 수 없습니다."));
 		}
 	}
 
 	@Operation(summary = "유저가 가입한 모든 멤버 조회")
 	@GetMapping("/userBoards")
-	public ResponseEntity<Response<List<BoardResponseDto>>> getUserBoards(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+	public ResponseEntity<ApiResponse<List<BoardResponseDto>>> getUserBoards(@AuthenticationPrincipal UserDetailsImpl userDetails) {
 		List<BoardResponseDto> boards = boardService.getUserBoards(userDetails);
-		return ResponseEntity.ok(Response.success(boards));
+		return ResponseEntity.ok(ApiResponse.success(boards));
 	}
 
 }

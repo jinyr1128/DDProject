@@ -1,4 +1,4 @@
-package com.ddproject.alarm.model;
+package com.ddproject.alarm.enums;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

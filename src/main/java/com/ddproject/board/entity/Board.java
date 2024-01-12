@@ -2,7 +2,7 @@ package com.ddproject.board.entity;
 
 import com.ddproject.board.dto.BoardRequestDto;
 import com.ddproject.member.entity.BoardMember;
-import com.ddproject.user.domain.User;
+import com.ddproject.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

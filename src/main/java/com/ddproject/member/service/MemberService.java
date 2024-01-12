@@ -7,7 +7,7 @@ import com.ddproject.member.dto.MemberRequestDto;
 import com.ddproject.member.dto.MemberResponseDto;
 import com.ddproject.member.entity.BoardMemberStatus;
 import com.ddproject.member.repository.BoardMemberRepository;
-import com.ddproject.user.domain.User;
+import com.ddproject.user.entity.User;
 import com.ddproject.user.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;

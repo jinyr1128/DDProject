@@ -1,18 +1,16 @@
 package com.ddproject.user.service;
 
-import com.ddproject.user.domain.User;
+import com.ddproject.user.entity.User;
 import com.ddproject.user.dto.CheckRequestDto;
 import com.ddproject.user.dto.PasswordDto;
 import com.ddproject.user.dto.SignupUserDto;
 import com.ddproject.user.repository.UserRepository;
 import com.ddproject.user.validation.SignupValidator;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.test.context.ActiveProfiles;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
