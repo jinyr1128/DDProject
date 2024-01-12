@@ -6,7 +6,7 @@ import com.ddproject.card.exception.CardErrorCode;
 import com.ddproject.card.exception.CardException;
 import com.ddproject.card.service.CardService;
 import com.ddproject.common.security.UserDetailsImpl;
-import com.ddproject.user.domain.User;
+import com.ddproject.user.entity.User;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

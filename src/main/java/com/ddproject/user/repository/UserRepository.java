@@ -1,7 +1,7 @@
 package com.ddproject.user.repository;
 
 
-import com.ddproject.user.domain.User;
+import com.ddproject.user.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

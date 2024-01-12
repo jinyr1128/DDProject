@@ -4,7 +4,7 @@ import com.ddproject.card.exception.CardException;
 import com.ddproject.column.exception.ColumnException;
 import com.ddproject.comment.exception.CommentException;
 import com.ddproject.global.exception.CustomException;
-import com.ddproject.global.response.Response;
+import com.ddproject.global.response.ApiResponse;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,28 +24,28 @@ public class CustomRestAdvice {
         log.error("Error occurs {}", e.toString());
 
         return ResponseEntity.status(e.getErrorCode().getStatus())
-                .body(Response.error(e.getErrorCode().name(), e.getMsg()));
+                .body(ApiResponse.error(e.getErrorCode().name(), e.getMsg()));
     }
     @ExceptionHandler(CardException.class)
     public ResponseEntity<?> cardExceptionHandler(CardException e) {
         log.error("Error occurs {}", e.toString());
 
         return ResponseEntity.status(e.getCardErrorCode().getStatus())
-                .body(Response.error(e.getCardErrorCode().name(), e.getMsg()));
+                .body(ApiResponse.error(e.getCardErrorCode().name(), e.getMsg()));
     }
     @ExceptionHandler(ColumnException.class)
     public ResponseEntity<?> columnExceptionHandler(ColumnException e) {
         log.error("Error occurs {}", e.toString());
 
         return ResponseEntity.status(e.getColumnErrorCode().getStatus())
-                .body(Response.error(e.getColumnErrorCode().name(), e.getMsg()));
+                .body(ApiResponse.error(e.getColumnErrorCode().name(), e.getMsg()));
     }
     @ExceptionHandler(CommentException.class)
     public ResponseEntity<?> commentExceptionHandler(CommentException e) {
         log.error("Error occurs {}", e.toString());
 
         return ResponseEntity.status(e.getCommentErrorCode().getStatus())
-                .body(Response.error(e.getCommentErrorCode().name(), e.getMsg()));
+                .body(ApiResponse.error(e.getCommentErrorCode().name(), e.getMsg()));
     }
 
     //컨트롤러 유효성 검증 예외처리 핸들러
@@ -64,6 +64,6 @@ public class CustomRestAdvice {
         }
 
         return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED)
-                .body(Response.error(HttpStatus.EXPECTATION_FAILED.name(), errorMap));
+                .body(ApiResponse.error(HttpStatus.EXPECTATION_FAILED.name(), errorMap));
     }
 }

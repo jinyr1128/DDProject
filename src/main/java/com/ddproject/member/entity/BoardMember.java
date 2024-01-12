@@ -1,7 +1,7 @@
 package com.ddproject.member.entity;
 
 import com.ddproject.board.entity.Board;
-import com.ddproject.user.domain.User;
+import com.ddproject.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

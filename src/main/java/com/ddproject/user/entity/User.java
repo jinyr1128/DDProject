@@ -1,4 +1,4 @@
-package com.ddproject.user.domain;
+package com.ddproject.user.entity;
 
 import jakarta.persistence.*;
 import lombok.*;

@@ -9,7 +9,7 @@ import com.ddproject.common.security.UserDetailsImpl;
 import com.ddproject.member.entity.BoardMember;
 import com.ddproject.member.entity.BoardMemberEnum;
 import com.ddproject.member.repository.BoardMemberRepository;
-import com.ddproject.user.domain.User;
+import com.ddproject.user.entity.User;
 import jakarta.persistence.EntityNotFoundException;
 
 import lombok.RequiredArgsConstructor;

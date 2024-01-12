@@ -1,8 +1,7 @@
 package com.ddproject.alarm.dto;
 
-import com.ddproject.alarm.model.AlarmArgs;
-import com.ddproject.alarm.model.AlarmType;
-import com.ddproject.user.domain.User;
+import com.ddproject.alarm.args.AlarmArgs;
+import com.ddproject.alarm.enums.AlarmType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
